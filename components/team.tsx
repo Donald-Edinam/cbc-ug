@@ -1,20 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { RevealWrapper } from "@/lib/use-reveal";
 import { team } from "@/data/site-data";
 import type { TeamMember } from "@/data/types";
 import { LinkedInIcon, GitHubIcon } from "./icons";
 import styles from "@/styles/page.module.css";
 
-interface TeamCardProps {
-  member: TeamMember;
-  delay: 0 | 1 | 2 | 3 | 4;
-}
-
-function TeamCard({ member, delay }: TeamCardProps) {
+function TeamCard({ member }: { member: TeamMember }) {
   return (
-    <RevealWrapper delay={delay} className={styles.teamCard}>
+    <div className={styles.teamCard} data-gsap="card">
       <div className={styles.teamCardImg}>
         {member.image ? (
           <Image
@@ -57,7 +51,7 @@ function TeamCard({ member, delay }: TeamCardProps) {
           )}
         </div>
       </div>
-    </RevealWrapper>
+    </div>
   );
 }
 
@@ -65,24 +59,20 @@ export default function Team() {
   return (
     <section className={styles.section} id="team">
       <div className={styles.container}>
-        <RevealWrapper className={styles.sectionLabel}>
+        <p className={styles.sectionLabel} data-gsap="section-label">
           Leadership Team
-        </RevealWrapper>
-        <RevealWrapper as="h2" delay={1} className={styles.sectionTitle}>
+        </p>
+        <h2 className={styles.sectionTitle} data-gsap="section-title">
           The people behind the club
-        </RevealWrapper>
-        <RevealWrapper as="p" delay={2} className={styles.sectionDesc}>
+        </h2>
+        <p className={styles.sectionDesc} data-gsap="section-desc">
           A cross-disciplinary team of students passionate about AI, building
           useful things, and growing a community that lasts.
-        </RevealWrapper>
+        </p>
 
-        <div className={styles.teamGrid}>
-          {team.map((member, i) => (
-            <TeamCard
-              key={member.name}
-              member={member}
-              delay={Math.min((i % 4) + 1, 4) as 1 | 2 | 3 | 4}
-            />
+        <div className={styles.teamGrid} data-gsap="card-group">
+          {team.map((member) => (
+            <TeamCard key={member.name} member={member} />
           ))}
         </div>
       </div>

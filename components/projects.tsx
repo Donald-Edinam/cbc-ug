@@ -1,6 +1,5 @@
 "use client";
 
-import { RevealWrapper } from "@/lib/use-reveal";
 import { projects } from "@/data/site-data";
 import type { TagVariant } from "@/data/types";
 import styles from "@/styles/page.module.css";
@@ -17,23 +16,23 @@ export default function Projects() {
   return (
     <section className={styles.section} id="projects">
       <div className={styles.container}>
-        <RevealWrapper className={styles.sectionLabel}>
+        <p className={styles.sectionLabel} data-gsap="section-label">
           Projects Showcase
-        </RevealWrapper>
-        <RevealWrapper as="h2" delay={1} className={styles.sectionTitle}>
+        </p>
+        <h2 className={styles.sectionTitle} data-gsap="section-title">
           Things we&apos;ve built
-        </RevealWrapper>
-        <RevealWrapper as="p" delay={2} className={styles.sectionDesc}>
+        </h2>
+        <p className={styles.sectionDesc} data-gsap="section-desc">
           From hackathon prototypes to deployed apps — here&apos;s a look at
           what our members are shipping with Claude.
-        </RevealWrapper>
+        </p>
 
-        <div className={styles.projectsGrid}>
-          {projects.map((project, i) => (
-            <RevealWrapper
+        <div className={styles.projectsGrid} data-gsap="card-group">
+          {projects.map((project) => (
+            <div
               key={project.title}
-              delay={Math.min(i + 1, 3) as 1 | 2 | 3}
               className={styles.projectCard}
+              data-gsap="card"
             >
               <span className={styles.projectNumber}>{project.number}</span>
               <div className={styles.projectTitle}>{project.title}</div>
@@ -42,13 +41,13 @@ export default function Projects() {
                 {project.tags.map((tag) => (
                   <span
                     key={tag.label}
-                    className={`${styles.projectTag} ${tagClass[tag.variant] || ""}`}
+                    className={`${styles.projectTag} ${tagClass[tag.variant] ?? ""}`}
                   >
                     {tag.label}
                   </span>
                 ))}
               </div>
-            </RevealWrapper>
+            </div>
           ))}
         </div>
       </div>

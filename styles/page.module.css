@@ -1132,6 +1132,57 @@
   letter-spacing: -0.005em;
 }
 
+/* ─── Hero line-reveal wrapper ─── */
+.lineWrap {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.05em;
+}
+
+/* ─── Marquee band ─── */
+.marquee {
+  overflow: hidden;
+  border-top: 1px solid var(--sand);
+  border-bottom: 1px solid var(--sand);
+  padding: 20px 0;
+  background: var(--warm-white);
+  user-select: none;
+}
+
+.marqueeTrack {
+  display: flex;
+  white-space: nowrap;
+  width: max-content;
+  animation: marqueeScroll 32s linear infinite;
+}
+
+.marquee:hover .marqueeTrack {
+  animation-play-state: paused;
+}
+
+.marqueeItem {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 580;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--earth);
+  padding: 0 28px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.marqueeAccent {
+  color: var(--claude-tan);
+  margin-left: 4px;
+}
+
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 /* ─── Responsive ─── */
 @media (max-width: 1024px) {
   .teamGrid {

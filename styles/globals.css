@@ -65,3 +65,25 @@ body {
 
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
+
+/* ─── GSAP initial states (prevents flash before JS runs) ─── */
+[data-gsap="hero-eyebrow"],
+[data-gsap="hero-sub"],
+[data-gsap="hero-actions"],
+[data-gsap="hero-badge"],
+[data-gsap="section-label"],
+[data-gsap="section-title"],
+[data-gsap="section-desc"],
+[data-gsap="card"],
+[data-gsap="about-p"],
+[data-gsap="join-section"],
+[data-gsap="join-item"],
+[data-gsap="footer"] {
+  opacity: 0;
+}
+
+[data-gsap="hero-line"] {
+  display: block;
+  opacity: 0;
+  transform: translateY(110%);
+}

@@ -3,7 +3,7 @@ import styles from "@/styles/page.module.css";
 
 export default function Footer() {
   return (
-    <footer className={styles.footer}>
+    <footer className={styles.footer} data-gsap="footer">
       <div className={styles.container}>
         <div className={styles.footerInner}>
           <div>
@@ -30,7 +30,7 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Claude Builders&apos; Club,
             University of Ghana. All rights reserved.
           </span>
-          <span className={styles.footerBuilt}>Built with ♥ using Claude &amp; Anthropic</span>
+          <span className={styles.footerBuilt}>Built with ♥ by CBC-UG Executives</span>
         </div>
       </div>
     </footer>

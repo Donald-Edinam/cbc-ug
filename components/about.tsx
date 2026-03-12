@@ -1,6 +1,5 @@
 "use client";
 
-import { RevealWrapper } from "@/lib/use-reveal";
 import { stats } from "@/data/site-data";
 import styles from "@/styles/page.module.css";
 
@@ -10,38 +9,52 @@ export default function About() {
       <div className={styles.container}>
         <div className={styles.aboutGrid}>
           <div className={styles.aboutText}>
-            <RevealWrapper className={styles.sectionLabel}>
+            <p className={styles.sectionLabel} data-gsap="section-label">
               About Us
-            </RevealWrapper>
-            <RevealWrapper as="h2" delay={1} className={styles.sectionTitle}>
+            </p>
+            <h2 className={styles.sectionTitle} data-gsap="section-title">
               Where curiosity
               <br />
               meets creation
-            </RevealWrapper>
-            <RevealWrapper as="p" delay={2}>
+            </h2>
+            <p data-gsap="about-p">
               The Claude Builders&apos; Club is the University of Ghana&apos;s
               home for AI exploration. We bring together students from computer
               science, engineering, business, the humanities, and beyond to
               learn, build, and ship real projects powered by Claude and
               Anthropic&apos;s tools.
-            </RevealWrapper>
-            <RevealWrapper as="p" delay={3}>
+            </p>
+            <p data-gsap="about-p">
               Whether you&apos;re writing your first prompt or deploying
               production AI applications, our community meets you where you are.
               We host weekly workshops, hackathons, and collaborative build
               sessions — all grounded in Anthropic&apos;s mission of building AI
               that is safe, beneficial, and understandable.
-            </RevealWrapper>
+            </p>
           </div>
 
-          <RevealWrapper delay={2} className={styles.aboutStats}>
-            {stats.map((stat) => (
-              <div key={stat.label} className={styles.statCard}>
-                <div className={styles.statNumber}>{stat.number}</div>
-                <div className={styles.statLabel}>{stat.label}</div>
-              </div>
-            ))}
-          </RevealWrapper>
+          <div
+            className={styles.aboutStats}
+            data-gsap="card-group"
+          >
+            {stats.map((stat) => {
+              const numericPart = stat.number.replace(/\D/g, "");
+              const suffix = stat.number.replace(/\d/g, "");
+              return (
+                <div key={stat.label} className={styles.statCard} data-gsap="card">
+                  <div
+                    className={styles.statNumber}
+                    data-gsap="counter"
+                    data-count={numericPart}
+                    data-suffix={suffix}
+                  >
+                    {stat.number}
+                  </div>
+                  <div className={styles.statLabel}>{stat.label}</div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

@@ -1,6 +1,5 @@
 "use client";
 
-import { RevealWrapper } from "@/lib/use-reveal";
 import styles from "@/styles/page.module.css";
 
 export default function Hero() {
@@ -8,32 +7,40 @@ export default function Hero() {
     <section className={styles.hero} id="hero">
       <div className={styles.container}>
         <div className={styles.heroContent}>
-          <RevealWrapper className={styles.heroEyebrow}>
+          <p
+            className={styles.heroEyebrow}
+            data-gsap="hero-eyebrow"
+          >
             University of Ghana
-          </RevealWrapper>
+          </p>
 
-          <RevealWrapper as="h1" delay={1}>
-            Building with AI,
-            <br />
-            <span className={styles.highlight}>together.</span>
-          </RevealWrapper>
+          <h1>
+            <span className={styles.lineWrap}>
+              <span data-gsap="hero-line">Building with AI,</span>
+            </span>
+            <span className={styles.lineWrap}>
+              <span data-gsap="hero-line">
+                <span className={styles.highlight}>together.</span>
+              </span>
+            </span>
+          </h1>
 
-          <RevealWrapper as="p" delay={2} className={styles.heroSub}>
+          <p className={styles.heroSub} data-gsap="hero-sub">
             We&apos;re a community of builders, thinkers, and creators at the
             University of Ghana — exploring the frontier of AI through hands-on
             projects, workshops, and collaboration with Claude and Anthropic.
-          </RevealWrapper>
+          </p>
 
-          <RevealWrapper delay={3} className={styles.heroActions}>
+          <div className={styles.heroActions} data-gsap="hero-actions">
             <a href="#join" className={styles.btnPrimary}>
               Join the Club <span>&rarr;</span>
             </a>
             <a href="#projects" className={styles.btnSecondary}>
               See Our Work
             </a>
-          </RevealWrapper>
+          </div>
 
-          <RevealWrapper delay={4} className={styles.heroBadge}>
+          <div className={styles.heroBadge} data-gsap="hero-badge">
             <div className={styles.heroBadgeStat}>
               <strong>120+</strong>
               <span>Active members</span>
@@ -46,7 +53,7 @@ export default function Hero() {
               <strong>8</strong>
               <span>Departments</span>
             </div>
-          </RevealWrapper>
+          </div>
         </div>
       </div>
 

@@ -1,49 +1,47 @@
 "use client";
 
 import Link from "next/link";
-import { RevealWrapper } from "@/lib/use-reveal";
 import { perks } from "@/data/site-data";
 import styles from "@/styles/page.module.css";
 
 export default function JoinSection() {
   return (
     <section className={styles.section} id="join">
-      <div className={styles.joinSection}>
+      <div className={styles.joinSection} data-gsap="join-section">
         <div className={styles.joinInnerCentered}>
-          <RevealWrapper
-            className={styles.joinLabel}
-            style={{ justifyContent: "center" }}
-          >
+          <p className={styles.joinLabel} data-gsap="join-item">
             Join Us
-          </RevealWrapper>
+          </p>
 
-          <RevealWrapper as="h2" delay={1} className={styles.joinTitle}>
+          <h2 className={styles.joinTitle} data-gsap="join-item">
             Ready to build
             <br />
             something great?
-          </RevealWrapper>
+          </h2>
 
-          <RevealWrapper as="p" delay={2} className={styles.joinDesc}>
+          <p className={styles.joinDesc} data-gsap="join-item">
             Whether you&apos;re a first-year curious about AI or a final-year
             building production apps — there&apos;s a seat at the table for you.
             No experience required, just bring your curiosity.
-          </RevealWrapper>
+          </p>
 
-          <RevealWrapper delay={3} className={styles.joinPerksRow}>
+          <div className={styles.joinPerksRow} data-gsap="join-item">
             {perks.map((perk) => (
               <div key={perk} className={styles.perkItem}>
                 <span className={styles.perkIcon}>&#x2713;</span>
                 {perk}
               </div>
             ))}
-          </RevealWrapper>
+          </div>
 
-          <RevealWrapper delay={3} className={styles.joinCtaWrap}>
+          <div className={styles.joinCtaWrap} data-gsap="join-item">
             <Link href="/join" className={styles.joinCtaBtn}>
               Join the Builders&apos; Club <span>&rarr;</span>
             </Link>
-            <p className={styles.joinNote}>Free to join &middot; Open to all UG students</p>
-          </RevealWrapper>
+            <p className={styles.joinNote}>
+              Free to join &middot; Open to all UG students
+            </p>
+          </div>
         </div>
       </div>
     </section>
