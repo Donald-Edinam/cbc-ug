@@ -85,5 +85,4 @@ img { display: block; max-width: 100%; }
 [data-gsap="hero-line"] {
   display: block;
   opacity: 0;
-  transform: translateY(110%);
 }

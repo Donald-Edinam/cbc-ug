@@ -20,9 +20,9 @@ export default function ScrollAnimations() {
         )
         .fromTo(
           '[data-gsap="hero-line"]',
-          { yPercent: 110, opacity: 0 },
+          { y: 64, opacity: 0 },
           {
-            yPercent: 0,
+            y: 0,
             opacity: 1,
             duration: 1.1,
             stagger: 0.13,
@@ -33,8 +33,8 @@ export default function ScrollAnimations() {
         .fromTo(
           '[data-gsap="hero-sub"]',
           { opacity: 0, y: 24 },
-          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
-          "-=0.65"
+          { opacity: 1, y: 0, duration: 0.85, ease: "power3.out" },
+          "-=0.4"
         )
         .fromTo(
           '[data-gsap="hero-actions"] > *',
@@ -42,11 +42,11 @@ export default function ScrollAnimations() {
           {
             opacity: 1,
             y: 0,
-            duration: 0.65,
+            duration: 0.6,
             stagger: 0.1,
             ease: "power3.out",
           },
-          "-=0.55"
+          "-=0.4"
         )
         .fromTo(
           '[data-gsap="hero-badge"] > *',
@@ -54,11 +54,11 @@ export default function ScrollAnimations() {
           {
             opacity: 1,
             y: 0,
-            duration: 0.55,
+            duration: 0.5,
             stagger: 0.1,
             ease: "power3.out",
           },
-          "-=0.38"
+          "-=0.3"
         );
 
       // ── 2. Section labels (slide in from left) ──────────────────────────
