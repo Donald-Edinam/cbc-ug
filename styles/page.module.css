@@ -914,6 +914,198 @@
 .tagMobile { background: var(--tag-mobile-bg); color: var(--tag-mobile-c); }
 
 /* ─── Join ─── */
+/* ─── Hackathon Banner ─── */
+.hackathonBanner {
+  padding: var(--section-py) 0;
+}
+
+.hackathonInner {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 64px;
+  align-items: center;
+  background: #1b1a18;
+  border-radius: 24px;
+  padding: clamp(48px, 7vw, 88px) clamp(40px, 7vw, 80px);
+  position: relative;
+  overflow: hidden;
+}
+
+.hackathonInner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 100% 50%, rgba(217, 124, 93, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hackathonPill {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--claude-tan);
+  background: rgba(217, 124, 93, 0.15);
+  border: 1px solid rgba(217, 124, 93, 0.3);
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+}
+
+.hackathonTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 750;
+  letter-spacing: -0.04em;
+  color: #ede9e0;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.hackathonDate {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: rgba(237, 233, 224, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hackathonInfoRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.hackathonInfoDot {
+  color: rgba(237, 233, 224, 0.3);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.hackathonDateIcon {
+  font-size: 1rem;
+}
+
+.hackathonThemeLine {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: rgba(237, 233, 224, 0.55);
+  margin-bottom: 20px;
+}
+
+.hackathonThemeValue {
+  color: var(--claude-tan);
+  font-style: italic;
+}
+
+.hackathonDesc {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(237, 233, 224, 0.65);
+  max-width: 480px;
+  margin-bottom: 36px;
+}
+
+.hackathonCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--claude-tan);
+  color: #1b1a18;
+  padding: 14px 30px;
+  border-radius: var(--radius-btn);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hackathonCta:hover {
+  background: var(--claude-amber);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(217, 124, 93, 0.35);
+}
+
+/* Countdown */
+.hackathonCountdown {
+  background: rgba(237, 233, 224, 0.05);
+  border: 1px solid rgba(237, 233, 224, 0.1);
+  border-radius: 20px;
+  padding: 40px 32px;
+  text-align: center;
+}
+
+.countdownLabel {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(237, 233, 224, 0.4);
+  margin-bottom: 28px;
+}
+
+.countdownGrid {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+}
+
+.countdownUnit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 56px;
+}
+
+.countdownNum {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 750;
+  letter-spacing: -0.04em;
+  color: #ede9e0;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.countdownTick {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(237, 233, 224, 0.35);
+}
+
+.countdownSep {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 300;
+  color: rgba(237, 233, 224, 0.25);
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.countdownOver {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--claude-tan);
+}
+
+/* ─── Join Section ─── */
 .joinSection {
   background: var(--ink);
   border-radius: 24px;
@@ -1225,6 +1417,15 @@
 @media (max-width: 1024px) {
   .teamGrid {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .hackathonInner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .hackathonCountdown {
+    padding: 32px 24px;
   }
 }
 

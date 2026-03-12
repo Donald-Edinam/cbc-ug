@@ -185,7 +185,19 @@ export default function ScrollAnimations() {
           );
         });
 
-        // ── 8. Join section ───────────────────────────────────────────
+        // ── 8. Hackathon banner ───────────────────────────────────────
+        const hackEl = document.querySelector('[data-gsap="hackathon-banner"]');
+        if (hackEl) {
+          gsap.fromTo(hackEl,
+            { opacity: 0, y: low ? 24 : 48 },
+            {
+              opacity: 1, y: 0, duration: 0.9, ease: c.ease,
+              scrollTrigger: { trigger: hackEl, start: "top 82%", once: true },
+            }
+          );
+        }
+
+        // ── 9. Join section ───────────────────────────────────────────
         const joinEl = document.querySelector('[data-gsap="join-section"]');
         if (joinEl) {
           const joinTl = gsap.timeline({

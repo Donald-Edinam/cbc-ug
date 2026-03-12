@@ -168,6 +168,7 @@ export const perks: string[] = [
 
 export const navLinks: NavLink[] = [
   { href: "#about", label: "About" },
+  { href: "#hackathon", label: "Hackathon" },
   { href: "#events", label: "Events" },
   { href: "#team", label: "Team" },
   { href: "#projects", label: "Projects" },
