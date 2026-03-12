@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { perks } from "@/data/site-data";
 import styles from "@/styles/page.module.css";
 
@@ -35,9 +34,14 @@ export default function JoinSection() {
           </div>
 
           <div className={styles.joinCtaWrap} data-gsap="join-item">
-            <Link href="/join" className={styles.joinCtaBtn}>
+            <a
+              href="https://www.jotform.com/253555944387168"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.joinCtaBtn}
+            >
               Join the Builders&apos; Club <span>&rarr;</span>
-            </Link>
+            </a>
             <p className={styles.joinNote}>
               Free to join &middot; Open to all UG students
             </p>
