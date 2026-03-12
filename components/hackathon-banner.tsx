@@ -47,21 +47,26 @@ export default function HackathonBanner() {
             </div>
 
             <p className={styles.hackathonThemeLine}>
-              Theme: <span className={styles.hackathonThemeValue}>Coming Soon</span>
+              Theme: <span className={styles.hackathonThemeValue}>Build AI for Human Flourishing</span>
             </p>
             <p className={styles.hackathonDesc}>
               CBC-UG&apos;s first-ever hackathon — 24 hours to ideate, build, and ship
               an AI-powered solution to a real-world problem. Open to all UG students,
               all skill levels welcome.
             </p>
-            <a
-              href="https://www.jotform.com/253555944387168"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.hackathonCta}
-            >
-              Register Now <ArrowRight size={16} strokeWidth={2} />
-            </a>
+            <div className={styles.hackathonCtaRow}>
+              <a
+                href="https://www.jotform.com/253555944387168"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.hackathonCta}
+              >
+                Register Now <ArrowRight size={16} strokeWidth={2} />
+              </a>
+              <a href="/hackathon" className={styles.hackathonLink}>
+                See full details <ArrowRight size={13} strokeWidth={2} />
+              </a>
+            </div>
           </div>
 
           <div className={styles.hackathonCountdown}>

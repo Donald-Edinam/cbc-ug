@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { useTheme } from "@/lib/theme-context";
 import { SunIcon, MoonIcon } from "./icons";
 import { navLinks } from "@/data/site-data";
@@ -8,6 +9,7 @@ import styles from "@/styles/page.module.css";
 
 export default function Navbar() {
   const { theme, toggleTheme, mounted } = useTheme();
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
@@ -43,7 +45,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ""}`}>
+      <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ""} ${pathname === "/hackathon" && !scrolled ? styles.navbarImmersive : ""}`}>
         <div className={styles.navbarInner}>
           <a href="#hero" className={styles.navbarBrand}>
             <span className={styles.brandIcon}>CBC</span>
