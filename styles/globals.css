@@ -1,4 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+@font-face {
+  font-family: 'anthropicSans';
+  src: url('/fonts/anthropicSans-normal.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 300 800;
+  font-style: normal;
+  font-feature-settings: 'dlig' 0;
+}
+
+@font-face {
+  font-family: 'anthropicSans';
+  src: url('/fonts/anthropicSans-italic.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 300 800;
+  font-style: italic;
+  font-feature-settings: 'dlig' 0;
+}
+
+@font-face {
+  font-family: 'anthropicSerif';
+  src: url('/fonts/anthropicSerif-normal.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 300 800;
+  font-style: normal;
+  font-feature-settings: 'dlig' 0;
+}
+
+@font-face {
+  font-family: 'anthropicSerif';
+  src: url('/fonts/anthropicSerif-italic.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 300 800;
+  font-style: italic;
+  font-feature-settings: 'dlig' 0;
+}
 
 *,
 *::before,
@@ -16,7 +50,7 @@ html {
 }
 
 body {
-  font-family: 'Lora', Georgia, 'Times New Roman', serif;
+  font-family: 'anthropicSerif', Georgia, 'Times New Roman', Times, serif;
   background: var(--cream, #ede9e0);
   color: var(--ink, #1b1a18);
   line-height: 1.7;

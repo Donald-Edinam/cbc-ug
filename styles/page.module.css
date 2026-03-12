@@ -12,8 +12,8 @@
   --claude-amber: #c26a4d;
   --claude-deep: #b05e43;
   --accent-warm: #e8b8a4;
-  --font-display: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: 'Lora', Georgia, 'Times New Roman', serif;
+  --font-display: 'anthropicSans', system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --font-body: 'anthropicSerif', Georgia, 'Times New Roman', Times, serif;
   --max-w: 1200px;
   --section-py: clamp(80px, 10vw, 140px);
   --nav-bg: rgba(237, 233, 224, 0.85);
