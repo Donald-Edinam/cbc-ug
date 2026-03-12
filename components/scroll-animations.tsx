@@ -146,7 +146,7 @@ export default function ScrollAnimations() {
             {
               opacity: 1, y: 0, scale: 1,
               duration: c.cardDur, stagger: c.stagger, ease: c.ease,
-              scrollTrigger: { trigger: group, start: "top 84%", once: true },
+              scrollTrigger: { trigger: group, start: "top 95%", once: true, invalidateOnRefresh: true },
             }
           );
         });
