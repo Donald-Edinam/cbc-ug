@@ -17,16 +17,16 @@ html {
 
 body {
   font-family: 'Lora', Georgia, 'Times New Roman', serif;
-  background: var(--cream, #FAF8F5);
-  color: var(--ink, #1A1614);
+  background: var(--cream, #ede9e0);
+  color: var(--ink, #1b1a18);
   line-height: 1.7;
   overflow-x: hidden;
   transition: background 0.4s ease, color 0.4s ease;
 }
 
 ::selection {
-  background: var(--claude-tan, #D4A574);
-  color: var(--ink, #1A1614);
+  background: var(--claude-tan, #d97c5d);
+  color: var(--ink, #1b1a18);
 }
 
 a { color: inherit; text-decoration: none; }

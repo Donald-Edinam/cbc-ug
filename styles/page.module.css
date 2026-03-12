@@ -1,54 +1,54 @@
 /* ─── Variables ─── */
 :root {
-  --cream: #FAF8F5;
-  --warm-white: #F5F1EC;
-  --sand: #E8E2DA;
-  --stone: #C4BAB0;
-  --earth: #8C7E72;
-  --bark: #5C4F44;
-  --ink: #1A1614;
-  --ink-soft: #2E2824;
-  --claude-tan: #D4A574;
-  --claude-amber: #C4956A;
-  --claude-deep: #A67B52;
-  --accent-warm: #E8C4A0;
+  --cream: #ede9e0;
+  --warm-white: #e5e1d8;
+  --sand: #d6d2c9;
+  --stone: #a4a19b;
+  --earth: #838079;
+  --bark: #5b5954;
+  --ink: #1b1a18;
+  --ink-soft: #2e2c29;
+  --claude-tan: #d97c5d;
+  --claude-amber: #c26a4d;
+  --claude-deep: #b05e43;
+  --accent-warm: #e8b8a4;
   --font-display: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Lora', Georgia, 'Times New Roman', serif;
   --max-w: 1200px;
   --section-py: clamp(80px, 10vw, 140px);
-  --nav-bg: rgba(250, 248, 245, 0.85);
-  --nav-scrolled-shadow: rgba(26, 22, 20, 0.04);
-  --card-hover-shadow: rgba(26, 22, 20, 0.08);
-  --tag-ai-bg: #E8D5C0;
+  --nav-bg: rgba(237, 233, 224, 0.85);
+  --nav-scrolled-shadow: rgba(27, 26, 24, 0.04);
+  --card-hover-shadow: rgba(27, 26, 24, 0.08);
+  --tag-ai-bg: #e4cbc2;
   --tag-ai-c: var(--claude-deep);
-  --tag-web-bg: #D0DDE8;
+  --tag-web-bg: #c8d8e4;
   --tag-web-c: #3A5C78;
-  --tag-hack-bg: #D8E8D0;
+  --tag-hack-bg: #cce0cc;
   --tag-hack-c: #4A6940;
-  --tag-data-bg: #E0D8E8;
+  --tag-data-bg: #d8d0e4;
   --tag-data-c: #5C4A6E;
-  --tag-mobile-bg: #E8E0D0;
-  --tag-mobile-c: #6E5C3A;
+  --tag-mobile-bg: #ddd8cc;
+  --tag-mobile-c: #5b5030;
 }
 
 :global([data-theme="dark"]) {
-  --cream: #141210;
-  --warm-white: #1C1A17;
-  --sand: #2A2622;
-  --stone: #5C544A;
-  --earth: #9C9488;
-  --bark: #C4BAB0;
-  --ink: #F5F1EC;
-  --ink-soft: #E8E2DA;
-  --claude-tan: #D4A574;
-  --claude-amber: #C4956A;
-  --claude-deep: #D4A574;
-  --accent-warm: #3D2E1F;
-  --nav-bg: rgba(20, 18, 16, 0.88);
+  --cream: #1b1a18;
+  --warm-white: #252320;
+  --sand: #333129;
+  --stone: #5b5954;
+  --earth: #838079;
+  --bark: #a4a19b;
+  --ink: #ede9e0;
+  --ink-soft: #e5e1d8;
+  --claude-tan: #d97c5d;
+  --claude-amber: #c26a4d;
+  --claude-deep: #d97c5d;
+  --accent-warm: #3d2318;
+  --nav-bg: rgba(27, 26, 24, 0.88);
   --nav-scrolled-shadow: rgba(0, 0, 0, 0.2);
   --card-hover-shadow: rgba(0, 0, 0, 0.25);
-  --tag-ai-bg: #3D2E1F;
-  --tag-ai-c: #D4A574;
+  --tag-ai-bg: #3d2318;
+  --tag-ai-c: #d97c5d;
   --tag-web-bg: #1E2A36;
   --tag-web-c: #8AB4D8;
   --tag-hack-bg: #1E2E1A;
@@ -56,7 +56,7 @@
   --tag-data-bg: #28203A;
   --tag-data-c: #B8A0D0;
   --tag-mobile-bg: #302818;
-  --tag-mobile-c: #C4A870;
+  --tag-mobile-c: #c4a870;
 }
 
 /* ─── Animations ─── */
@@ -881,18 +881,18 @@
 
 /* ─── Join ─── */
 .joinSection {
-  background: #1A1614;
+  background: #1b1a18;
   border-radius: 28px;
   padding: clamp(48px, 6vw, 80px);
   margin: 0 clamp(20px, 4vw, 48px);
-  color: #FAF8F5;
+  color: #ede9e0;
   position: relative;
   overflow: hidden;
 }
 
 :global([data-theme="dark"]) .joinSection {
-  background: #0C0A08;
-  border: 1px solid #2A2622;
+  background: #111009;
+  border: 1px solid #333129;
 }
 
 .joinSection::before {
@@ -902,7 +902,7 @@
   right: -20%;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(212, 165, 116, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(217, 124, 93, 0.15) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -920,7 +920,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #D4A574;
+  color: #d97c5d;
   margin-bottom: 16px;
   display: flex;
   align-items: center;
@@ -931,7 +931,7 @@
   content: '';
   width: 24px;
   height: 2px;
-  background: #D4A574;
+  background: #d97c5d;
   border-radius: 2px;
 }
 
@@ -941,7 +941,7 @@
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.03em;
-  color: #FAF8F5;
+  color: #ede9e0;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -949,7 +949,7 @@
 .joinDesc {
   font-size: 1.05rem;
   line-height: 1.8;
-  color: #C4BAB0;
+  color: #a4a19b;
   max-width: 560px;
   margin: 0 auto 36px;
   text-align: center;
@@ -965,7 +965,7 @@
 .perkItem {
   font-family: var(--font-display);
   font-size: 0.88rem;
-  color: #E8E2DA;
+  color: #e5e1d8;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -976,13 +976,13 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: rgba(212, 165, 116, 0.12);
+  background: rgba(217, 124, 93, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   font-size: 0.85rem;
-  color: #D4A574;
+  color: #d97c5d;
 }
 
 .joinCtaWrap {
@@ -996,8 +996,8 @@
   font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 600;
-  background: #FAF8F5;
-  color: #1A1614;
+  background: #ede9e0;
+  color: #1b1a18;
   padding: 18px 44px;
   border-radius: 100px;
   transition: all 0.3s ease;
@@ -1006,18 +1006,18 @@
 }
 
 .joinCtaBtn:hover {
-  background: #F5F1EC;
+  background: #e5e1d8;
   transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(250, 248, 245, 0.15);
+  box-shadow: 0 12px 32px rgba(237, 233, 224, 0.15);
 }
 
 :global([data-theme="dark"]) .joinCtaBtn {
-  background: #D4A574;
-  color: #141210;
+  background: #d97c5d;
+  color: #1b1a18;
 }
 
 :global([data-theme="dark"]) .joinCtaBtn:hover {
-  background: #C4956A;
+  background: #c26a4d;
 }
 
 /* ─── Footer ─── */
