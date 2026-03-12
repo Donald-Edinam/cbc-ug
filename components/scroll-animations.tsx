@@ -93,15 +93,15 @@ export default function ScrollAnimations() {
             "-=0.4"
           )
           .fromTo(
-            '[data-gsap="hero-actions"] > *',
+            '[data-gsap="hero-actions"]',
             { opacity: 0, y: 16 },
-            { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: c.ease },
+            { opacity: 1, y: 0, duration: 0.6, ease: c.ease },
             "-=0.4"
           )
           .fromTo(
-            '[data-gsap="hero-badge"] > *',
+            '[data-gsap="hero-badge"]',
             { opacity: 0, y: 12 },
-            { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: c.ease },
+            { opacity: 1, y: 0, duration: 0.5, ease: c.ease },
             "-=0.3"
           );
 
