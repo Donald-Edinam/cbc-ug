@@ -42,6 +42,7 @@ export default function JoinSection() {
             <Link href="/join" className={styles.joinCtaBtn}>
               Join the Builders&apos; Club <span>&rarr;</span>
             </Link>
+            <p className={styles.joinNote}>Free to join &middot; Open to all UG students</p>
           </RevealWrapper>
         </div>
       </div>

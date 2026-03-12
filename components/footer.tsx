@@ -9,7 +9,7 @@ export default function Footer() {
           <div>
             <div className={styles.footerBrand}>
               <span className={styles.brandIcon}>CB</span>
-              Claude Builders&apos; Club
+              <span>Claude Builders&apos; Club</span>
             </div>
             <p className={styles.footerTagline}>
               A student community at the University of Ghana building with AI,
@@ -30,7 +30,7 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Claude Builders&apos; Club,
             University of Ghana. All rights reserved.
           </span>
-          <span className={styles.footerBuilt}>Built with Claude</span>
+          <span className={styles.footerBuilt}>Built with ♥ using Claude &amp; Anthropic</span>
         </div>
       </div>
     </footer>

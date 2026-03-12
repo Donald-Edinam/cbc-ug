@@ -32,6 +32,21 @@ export default function Hero() {
               See Our Work
             </a>
           </RevealWrapper>
+
+          <RevealWrapper delay={4} className={styles.heroBadge}>
+            <div className={styles.heroBadgeStat}>
+              <strong>120+</strong>
+              <span>Active members</span>
+            </div>
+            <div className={styles.heroBadgeStat}>
+              <strong>24</strong>
+              <span>Projects shipped</span>
+            </div>
+            <div className={styles.heroBadgeStat}>
+              <strong>8</strong>
+              <span>Departments</span>
+            </div>
+          </RevealWrapper>
         </div>
       </div>
 

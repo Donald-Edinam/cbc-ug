@@ -47,7 +47,7 @@ export default function Navbar() {
         <div className={styles.navbarInner}>
           <a href="#hero" className={styles.navbarBrand}>
             <span className={styles.brandIcon}>CB</span>
-            Claude Builders&apos; Club
+            <span className={styles.brandName}>Claude Builders&apos; Club</span>
           </a>
 
           <ul className={styles.navbarLinks}>
