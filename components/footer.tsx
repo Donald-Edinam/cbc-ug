@@ -9,7 +9,10 @@ export default function Footer() {
           <div>
             <div className={styles.footerBrand}>
               <span className={styles.brandIcon}>CB</span>
-              <span>Claude Builders&apos; Club</span>
+              <span className={styles.brandText}>
+                <span className={styles.brandName}>Claude Builders&apos; Club</span>
+                <span className={styles.brandSub}>University of Ghana Chapter</span>
+              </span>
             </div>
             <p className={styles.footerTagline}>
               A student community at the University of Ghana building with AI,

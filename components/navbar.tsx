@@ -47,7 +47,10 @@ export default function Navbar() {
         <div className={styles.navbarInner}>
           <a href="#hero" className={styles.navbarBrand}>
             <span className={styles.brandIcon}>CB</span>
-            <span className={styles.brandName}>Claude Builders&apos; Club</span>
+            <span className={styles.brandText}>
+              <span className={styles.brandName}>Claude Builders&apos; Club</span>
+              <span className={styles.brandSub}>University of Ghana Chapter</span>
+            </span>
           </a>
 
           <ul className={styles.navbarLinks}>
