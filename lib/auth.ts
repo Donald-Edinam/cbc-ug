@@ -14,8 +14,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         callbackType: {},
       },
       async authorize(credentials) {
-        // Google OAuth callback — backend already authenticated, just verify & load user
-        if (credentials.callbackType === "google" && credentials.accessToken) {
+        // Magic link / Google OAuth callback — tokens already issued by backend
+        if ((credentials.callbackType === "magic" || credentials.callbackType === "google") && credentials.accessToken) {
           const res = await fetch(`${API_URL}/api/auth/me`, {
             headers: { Authorization: `Bearer ${credentials.accessToken}` },
           });

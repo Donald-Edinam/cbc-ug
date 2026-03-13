@@ -18,12 +18,30 @@ export function useMe() {
   });
 }
 
-// ── POST /api/auth/register ───────────────────────────────────────────────────
+// ── POST /api/auth/register (interest form) ───────────────────────────────────
+
+export interface InterestInput {
+  name: string;
+  email: string;
+  university: string;
+  programOfStudy: string;
+  level: string;
+linkedinGithub?: string;
+}
 
 export function useRegister() {
-  return useMutation<RegisterResponse, Error, RegisterInput>({
+  return useMutation<{ message: string }, Error, InterestInput>({
     mutationFn: (input) =>
       apiClient.post("/api/auth/register", input).then((r) => r.data),
+  });
+}
+
+// ── POST /api/auth/magic-link ─────────────────────────────────────────────────
+
+export function useMagicLinkRequest() {
+  return useMutation<{ message: string }, Error, { email: string }>({
+    mutationFn: (input) =>
+      apiClient.post("/api/auth/magic-link", input).then((r) => r.data),
   });
 }
 
