@@ -27,6 +27,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             name: user.name,
             image: user.avatarUrl ?? null,
             role: user.role,
+            emailVerified: user.emailVerified ?? true,
             accessToken: credentials.accessToken as string,
             refreshToken: credentials.refreshToken as string,
           };
@@ -50,6 +51,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           name: data.user.name,
           image: data.user.avatarUrl ?? null,
           role: data.user.role,
+          emailVerified: data.user.emailVerified ?? false,
           accessToken: data.accessToken,
           refreshToken: data.refreshToken,
         };
@@ -63,6 +65,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const u = user as any;
         token.role = u.role;
+        token.emailVerified = u.emailVerified ?? false;
         token.accessToken = u.accessToken;
         token.refreshToken = u.refreshToken;
       }
@@ -71,6 +74,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     session({ session, token }) {
       session.user.id = token.id as string;
       session.user.role = token.role as string;
+      session.user.emailVerified = token.emailVerified as boolean;
       session.user.accessToken = token.accessToken as string;
       session.user.refreshToken = token.refreshToken as string;
       return session;

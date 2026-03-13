@@ -21,7 +21,7 @@ import {
 export const metadata: Metadata = {
   title: "BuildAI Hackathon — Claude Builders' Club, UG",
   description:
-    "CBC-UG's first annual hackathon. 24 hours to build AI-powered solutions inspired by Dario Amodei's vision in Machines of Loving Grace.",
+    "CBC-UG's first semester hackathon. 24 hours to build AI-powered solutions inspired by Dario Amodei's vision in Machines of Loving Grace.",
 };
 
 const domains = [
@@ -41,7 +41,7 @@ const domains = [
     icon: TrendingUp,
     title: "Economic Empowerment",
     span: "normal" as const,
-    desc: "AI adoption could drive 10–20% annual GDP growth in developing nations, bringing hundreds of millions out of poverty faster than any prior era.",
+    desc: "AI adoption could drive 10–20% semester GDP growth in developing nations, bringing hundreds of millions out of poverty faster than any prior era.",
   },
   {
     icon: Scale,
@@ -75,7 +75,7 @@ export default function HackathonPage() {
         <div className={styles.container}>
           <div className={styles.heroContent}>
             <div className={styles.heroPill}>
-              CBC-UG · First Annual Hackathon
+              CBC-UG · First Semester Hackathon
             </div>
 
             <h1 className={styles.heroTitle}>

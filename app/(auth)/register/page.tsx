@@ -85,8 +85,7 @@ export default function RegisterPage() {
       if (result?.error) {
         router.push("/login?registered=1");
       } else {
-        router.push("/");
-        router.refresh();
+        router.push(`/verify-email?email=${encodeURIComponent(email)}`);
       }
     } catch {
       setError("Something went wrong. Please check your connection.");
