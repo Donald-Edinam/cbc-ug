@@ -11,14 +11,14 @@ const KEYS = {
   invite: (id: string) => ["teams", id, "invite"] as const,
 };
 
-// ── GET /api/hackathons/:hackathonId/teams ────────────────────────────────────
+// ── GET /api/teams/hackathon/:hackathonId ────────────────────────────────────
 
 export function useHackathonTeams(hackathonId: string) {
   return useQuery<Team[]>({
     queryKey: KEYS.hackathonTeams(hackathonId),
     queryFn: () =>
       apiClient
-        .get(`/api/hackathons/${hackathonId}/teams`)
+        .get(`/api/teams/hackathon/${hackathonId}`)
         .then((r) => r.data),
     enabled: Boolean(hackathonId),
   });
@@ -47,7 +47,7 @@ export function useTeamInviteCode(teamId: string) {
   });
 }
 
-// ── POST /api/hackathons/:hackathonId/teams ───────────────────────────────────
+// ── POST /api/teams/hackathon/:hackathonId ───────────────────────────────────
 
 export function useCreateTeam(hackathonId: string) {
   const api = useApiClient();
@@ -55,7 +55,7 @@ export function useCreateTeam(hackathonId: string) {
   return useMutation<Team, Error, CreateTeamInput>({
     mutationFn: (input) =>
       api
-        .post(`/api/hackathons/${hackathonId}/teams`, input)
+        .post(`/api/teams/hackathon/${hackathonId}`, input)
         .then((r) => r.data),
     onSuccess: () =>
       qc.invalidateQueries({ queryKey: KEYS.hackathonTeams(hackathonId) }),

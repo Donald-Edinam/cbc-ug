@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Pencil, Trash2, ChevronDown, Loader2, AlertCircle, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import { Plus, Pencil, Trash2, ChevronDown, Loader2, AlertCircle, X, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
   useHackathons, 
@@ -60,6 +60,10 @@ function fromLocal(local: string) {
 
 export default function AdminHackathonsPage() {
   const { data: hackathons = [], isLoading } = useHackathons();
+
+  console.log("Logging hackathon", hackathons);
+
+  const router = useRouter();
   const createMutation = useCreateHackathon();
   const updateMutation = useUpdateHackathon();
   const deleteMutation = useDeleteHackathon();
@@ -109,7 +113,7 @@ export default function AdminHackathonsPage() {
       if (editing) {
         await updateMutation.mutateAsync({ 
           id: editing.id, 
-          input: { ...input, status: form.status } as UpdateHackathonInput 
+          input: { ...input, status: form.status } as UpdateHackathonInput
         });
       } else {
         await createMutation.mutateAsync(input);
@@ -148,157 +152,27 @@ export default function AdminHackathonsPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-7">
-        <div>
-          <h1 className="text-[1.5rem] font-semibold" style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div className="space-y-1">
+          <h1 className="text-[1.75rem] font-bold tracking-tight" style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
             Hackathons
           </h1>
-          <p className="text-[0.83rem] mt-0.5" style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
-            Create and manage hackathon events.
+          <p className="text-[0.85rem]" style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
+            Manage and monitor all your hackathon events in one place.
           </p>
         </div>
-        <Button onClick={openCreate}>
-          <Plus size={14} className="mr-1.5" /> New hackathon
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button 
+            onClick={() => router.push("/admin/hackathons/new")}
+            className="group relative overflow-hidden flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all duration-300 hover:shadow-lg active:scale-95"
+          >
+            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+            <Plus size={16} className="relative z-10" />
+            <span className="relative z-10 font-semibold tracking-wide">New hackathon</span>
+          </Button>
+        </div>
       </div>
 
-      {/* Slide-in form */}
-      {showForm && (
-        <div
-          className="fixed inset-0 z-40 flex items-start justify-end"
-          style={{ background: "rgba(27,26,24,0.35)" }}
-          onClick={(e) => { if (e.target === e.currentTarget) setShowForm(false); }}
-        >
-          <div
-            className="h-full w-full max-w-lg overflow-y-auto flex flex-col"
-            style={{ background: "var(--warm-white)", boxShadow: "-4px 0 24px rgba(27,26,24,0.12)" }}
-          >
-            {/* Form header */}
-            <div className="flex items-center justify-between px-7 py-5 border-b" style={{ borderColor: "var(--sand)" }}>
-              <h2 className="text-[1.05rem] font-semibold" style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
-                {editing ? "Edit hackathon" : "New hackathon"}
-              </h2>
-              <button onClick={() => setShowForm(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--earth)" }}>
-                <X size={18} />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-7 py-6 flex-1">
-              {formError && (
-                <div className="flex items-center gap-2 text-[0.82rem] px-3 py-2.5 rounded-xl"
-                  style={{ background: "var(--tag-ai-bg)", color: "var(--claude-deep)", fontFamily: "var(--font-body)" }}>
-                  <AlertCircle size={13} className="shrink-0" /> {formError}
-                </div>
-              )}
-
-              <Input id="title" label="Title" required {...field("title")} placeholder="e.g. BuildAI Hackathon 2026" />
-              <Input id="theme" label="Theme" required {...field("theme")} placeholder="e.g. AI for Human Flourishing" />
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[0.78rem] font-semibold"
-                  style={{ color: "var(--ink)", fontFamily: "var(--font-display)" }}>
-                  Description
-                </label>
-                <textarea
-                  required
-                  rows={3}
-                  placeholder="Describe the hackathon…"
-                  className="w-full rounded-xl border px-3.5 py-2.5 text-[0.88rem] resize-none"
-                  style={{ borderColor: "var(--sand)", background: "var(--cream)", color: "var(--ink)", fontFamily: "var(--font-body)", outline: "none" }}
-                  {...field("description")}
-                />
-              </div>
-
-              <Input id="bannerUrl" label="Banner URL (optional)" {...field("bannerUrl")} placeholder="https://…" />
-              <Input id="prizes" label="Prizes (optional)" {...field("prizes")} placeholder="e.g. $500, Claude API credits…" />
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1">
-                  <label className="text-[0.78rem] font-semibold" style={{ color: "var(--ink)", fontFamily: "var(--font-display)" }}>
-                    Start date
-                  </label>
-                  <input type="datetime-local" required
-                    className="rounded-xl border px-3 py-2.5 text-[0.85rem]"
-                    style={{ borderColor: "var(--sand)", background: "var(--cream)", color: "var(--ink)", fontFamily: "var(--font-body)" }}
-                    {...field("startDate")} />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-[0.78rem] font-semibold" style={{ color: "var(--ink)", fontFamily: "var(--font-display)" }}>
-                    End date
-                  </label>
-                  <input type="datetime-local" required
-                    className="rounded-xl border px-3 py-2.5 text-[0.85rem]"
-                    style={{ borderColor: "var(--sand)", background: "var(--cream)", color: "var(--ink)", fontFamily: "var(--font-body)" }}
-                    {...field("endDate")} />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-[0.78rem] font-semibold" style={{ color: "var(--ink)", fontFamily: "var(--font-display)" }}>
-                    Registration closes
-                  </label>
-                  <input type="datetime-local" required
-                    className="rounded-xl border px-3 py-2.5 text-[0.85rem]"
-                    style={{ borderColor: "var(--sand)", background: "var(--cream)", color: "var(--ink)", fontFamily: "var(--font-body)" }}
-                    {...field("registrationDeadline")} />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-[0.78rem] font-semibold" style={{ color: "var(--ink)", fontFamily: "var(--font-display)" }}>
-                    Submission deadline
-                  </label>
-                  <input type="datetime-local" required
-                    className="rounded-xl border px-3 py-2.5 text-[0.85rem]"
-                    style={{ borderColor: "var(--sand)", background: "var(--cream)", color: "var(--ink)", fontFamily: "var(--font-body)" }}
-                    {...field("submissionDeadline")} />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-[0.78rem] font-semibold" style={{ color: "var(--ink)", fontFamily: "var(--font-display)" }}>
-                    Min team size
-                  </label>
-                  <input type="number" min={1} max={10} required
-                    className="rounded-xl border px-3 py-2.5 text-[0.85rem]"
-                    style={{ borderColor: "var(--sand)", background: "var(--cream)", color: "var(--ink)", fontFamily: "var(--font-body)" }}
-                    {...field("minTeamSize")} />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-[0.78rem] font-semibold" style={{ color: "var(--ink)", fontFamily: "var(--font-display)" }}>
-                    Max team size
-                  </label>
-                  <input type="number" min={1} max={10} required
-                    className="rounded-xl border px-3 py-2.5 text-[0.85rem]"
-                    style={{ borderColor: "var(--sand)", background: "var(--cream)", color: "var(--ink)", fontFamily: "var(--font-body)" }}
-                    {...field("maxTeamSize")} />
-                </div>
-              </div>
-
-              {editing && (
-                <div className="flex flex-col gap-1">
-                  <label className="text-[0.78rem] font-semibold" style={{ color: "var(--ink)", fontFamily: "var(--font-display)" }}>
-                    Status
-                  </label>
-                  <select
-                    className="rounded-xl border px-3 py-2.5 text-[0.85rem]"
-                    style={{ borderColor: "var(--sand)", background: "var(--cream)", color: "var(--ink)", fontFamily: "var(--font-body)" }}
-                    value={form.status}
-                    onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as HackathonStatus }))}
-                  >
-                    {STATUS_OPTIONS.map((s) => (
-                      <option key={s} value={s}>{STATUS_LABEL[s]}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              <div className="flex gap-2.5 mt-2">
-                <Button type="submit" loading={createMutation.isPending || updateMutation.isPending} loadingText="Saving…" className="flex-1">
-                  {editing ? "Save changes" : "Create hackathon"}
-                </Button>
-                <Button type="button" variant="secondary" onClick={() => setShowForm(false)}>
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* Hackathons list */}
       {isLoading ? (
@@ -308,24 +182,48 @@ export default function AdminHackathonsPage() {
         </div>
       ) : hackathons.length === 0 ? (
         <div
-          className="rounded-2xl border px-8 py-12 text-center"
-          style={{ background: "var(--warm-white)", borderColor: "var(--sand)" }}
+          className="relative overflow-hidden rounded-[2rem] border-2 border-dashed flex flex-col items-center justify-center px-8 py-20 text-center animate-in fade-in zoom-in duration-700"
+          style={{ 
+            background: "var(--warm-white)", 
+            borderColor: "var(--sand)",
+          }}
         >
-          <p className="text-[0.95rem] font-semibold mb-1" style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
-            No hackathons yet
+          {/* Decorative background circle */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-sand/10 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="relative z-10 mb-6 group">
+            <div className="w-20 h-20 rounded-3xl flex items-center justify-center transition-all duration-500 group-hover:rotate-12 group-hover:scale-110"
+              style={{ background: "var(--sand-light, #f8f6f2)", boxShadow: "0 10px 30px -10px rgba(0,0,0,0.1)" }}>
+              <Trophy size={40} className="text-claude-tan transition-transform duration-500 group-hover:scale-110" />
+            </div>
+          </div>
+          
+          <h3 className="text-[1.25rem] font-bold mb-2 relative z-10" style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
+            No Hackathons Yet
+          </h3>
+          <p className="text-[0.9rem] max-w-sm mb-10 leading-relaxed relative z-10" style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
+            The arena is quiet. Ready to spark some innovation? Create your first event to get the club building.
           </p>
-          <p className="text-[0.85rem] mb-5" style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
-            Create your first hackathon to get started.
-          </p>
-          <Button onClick={openCreate}><Plus size={14} className="mr-1.5" /> New hackathon</Button>
+          
+          <Button 
+            onClick={() => router.push("/admin/hackathons/new")}
+            className="relative z-10 flex items-center gap-2.5 px-8 py-3 rounded-2xl font-bold tracking-wide shadow-xl transition-all duration-300 hover:-translate-y-1 active:scale-95"
+          >
+            <Plus size={18} strokeWidth={2.5} />
+            Start New Event
+          </Button>
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
-          {hackathons.map((h) => (
+        <div className="flex flex-col gap-4">
+          {hackathons.map((h, idx) => (
             <div
               key={h.id}
-              className="rounded-2xl border px-6 py-5"
-              style={{ background: "var(--warm-white)", borderColor: "var(--sand)" }}
+              className="group rounded-[1.5rem] border px-6 py-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-4"
+              style={{ 
+                background: "var(--warm-white)", 
+                borderColor: "var(--sand)",
+                animationDelay: `${idx * 100}ms`
+              }}
             >
               <div className="flex items-start justify-between gap-4 flex-wrap">
                 <div className="flex-1 min-w-0">

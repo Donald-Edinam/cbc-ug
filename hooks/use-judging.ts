@@ -21,20 +21,20 @@ const KEYS = {
     ["judging", "scores", hackathonId] as const,
 };
 
-// ── GET /api/hackathons/:id/criteria ──────────────────────────────────────────
+// ── GET /api/judging/hackathon/:id/criteria ──────────────────────────────────────────
 
 export function useHackathonCriteria(hackathonId: string) {
   return useQuery<JudgingCriteria[]>({
     queryKey: KEYS.criteria(hackathonId),
     queryFn: () =>
       apiClient
-        .get(`/api/hackathons/${hackathonId}/criteria`)
+        .get(`/api/judging/hackathon/${hackathonId}/criteria`)
         .then((r) => r.data),
     enabled: Boolean(hackathonId),
   });
 }
 
-// ── POST /api/hackathons/:id/criteria ─────────────────────────────────────────
+// ── POST /api/judging/hackathon/:id/criteria ─────────────────────────────────────────
 
 export function useCreateCriteria(hackathonId: string) {
   const api = useApiClient();
@@ -42,14 +42,14 @@ export function useCreateCriteria(hackathonId: string) {
   return useMutation<JudgingCriteria, Error, CreateCriteriaInput>({
     mutationFn: (input) =>
       api
-        .post(`/api/hackathons/${hackathonId}/criteria`, input)
+        .post(`/api/judging/hackathon/${hackathonId}/criteria`, input)
         .then((r) => r.data),
     onSuccess: () =>
       qc.invalidateQueries({ queryKey: KEYS.criteria(hackathonId) }),
   });
 }
 
-// ── GET /api/judge/assignments ────────────────────────────────────────────────
+// ── GET /api/judging/assignments ────────────────────────────────────────────────
 
 export function useJudgeAssignments() {
   const api = useApiClient();
@@ -57,12 +57,12 @@ export function useJudgeAssignments() {
   return useQuery<Hackathon[]>({
     queryKey: KEYS.judgeAssignments,
     queryFn: () =>
-      api.get("/api/judge/assignments").then((r) => r.data),
+      api.get("/api/judging/assignments").then((r) => r.data),
     enabled: !!session?.user?.accessToken,
   });
 }
 
-// ── GET /api/judge/projects/:hackathonId ──────────────────────────────────────
+// ── GET /api/judging/projects/:hackathonId ──────────────────────────────────────
 
 export function useJudgeProjects(hackathonId: string) {
   const api = useApiClient();
@@ -71,20 +71,20 @@ export function useJudgeProjects(hackathonId: string) {
     queryKey: KEYS.judgeProjects(hackathonId),
     queryFn: () =>
       api
-        .get(`/api/judge/projects/${hackathonId}`)
+        .get(`/api/judging/projects/${hackathonId}`)
         .then((r) => r.data),
     enabled: Boolean(hackathonId) && !!session?.user?.accessToken,
   });
 }
 
-// ── POST /api/scores ──────────────────────────────────────────────────────────
+// ── POST /api/judging/scores ──────────────────────────────────────────────────────────
 
 export function useSubmitScore(hackathonId?: string) {
   const api = useApiClient();
   const qc = useQueryClient();
   return useMutation<Score, Error, SubmitScoreInput>({
     mutationFn: (input) =>
-      api.post("/api/scores", input).then((r) => r.data),
+      api.post("/api/judging/scores", input).then((r) => r.data),
     onSuccess: () => {
       if (hackathonId) {
         qc.invalidateQueries({ queryKey: KEYS.judgeProjects(hackathonId) });
@@ -94,7 +94,7 @@ export function useSubmitScore(hackathonId?: string) {
   });
 }
 
-// ── GET /api/hackathons/:id/scores ────────────────────────────────────────────
+// ── GET /api/judging/hackathon/:id/scores ────────────────────────────────────────────
 
 export function useHackathonScores(hackathonId: string) {
   const api = useApiClient();
@@ -103,13 +103,13 @@ export function useHackathonScores(hackathonId: string) {
     queryKey: KEYS.scores(hackathonId),
     queryFn: () =>
       api
-        .get(`/api/hackathons/${hackathonId}/scores`)
+        .get(`/api/judging/hackathon/${hackathonId}/scores`)
         .then((r) => r.data),
     enabled: Boolean(hackathonId) && !!session?.user?.accessToken,
   });
 }
 
-// ── POST /api/admin/judges/:hackathonId ───────────────────────────────────────
+// ── POST /api/judging/assign/:hackathonId ───────────────────────────────────────
 
 export function useAssignJudge(hackathonId: string) {
   const api = useApiClient();
@@ -117,7 +117,7 @@ export function useAssignJudge(hackathonId: string) {
   return useMutation<unknown, Error, { judgeId: string }>({
     mutationFn: (input) =>
       api
-        .post(`/api/admin/judges/${hackathonId}`, input)
+        .post(`/api/judging/assign/${hackathonId}`, input)
         .then((r) => r.data),
     onSuccess: () =>
       qc.invalidateQueries({ queryKey: KEYS.judgeAssignments }),

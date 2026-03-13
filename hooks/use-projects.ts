@@ -11,7 +11,7 @@ const KEYS = {
   public: ["projects", "public"] as const,
 };
 
-// ── GET /api/hackathons/:hackathonId/projects ─────────────────────────────────
+// ── GET /api/projects/hackathon/:hackathonId ─────────────────────────────────
 
 export function useHackathonProjects(hackathonId: string) {
   const api = useApiClient();
@@ -19,7 +19,7 @@ export function useHackathonProjects(hackathonId: string) {
     queryKey: KEYS.hackathonProjects(hackathonId),
     queryFn: () =>
       api
-        .get(`/api/hackathons/${hackathonId}/projects`)
+        .get(`/api/projects/hackathon/${hackathonId}`)
         .then((r) => r.data),
     enabled: Boolean(hackathonId),
   });
@@ -34,7 +34,7 @@ export function usePublicProjects() {
   });
 }
 
-// ── GET /api/teams/:teamId/project ────────────────────────────────────────────
+// ── GET /api/projects/teams/:teamId ────────────────────────────────────────────
 
 export function useTeamProject(teamId: string) {
   const api = useApiClient();
@@ -42,26 +42,26 @@ export function useTeamProject(teamId: string) {
   return useQuery<Project>({
     queryKey: KEYS.teamProject(teamId),
     queryFn: () =>
-      api.get(`/api/teams/${teamId}/project`).then((r) => r.data),
+      api.get(`/api/projects/teams/${teamId}`).then((r) => r.data),
     enabled: Boolean(teamId) && !!session?.user?.accessToken,
     retry: false,
   });
 }
 
-// ── POST /api/teams/:teamId/project ──────────────────────────────────────────
+// ── POST /api/projects/teams/:teamId ──────────────────────────────────────────
 
 export function useUpsertProject(teamId: string) {
   const api = useApiClient();
   const qc = useQueryClient();
   return useMutation<Project, Error, UpsertProjectInput>({
     mutationFn: (input) =>
-      api.post(`/api/teams/${teamId}/project`, input).then((r) => r.data),
+      api.post(`/api/projects/teams/${teamId}`, input).then((r) => r.data),
     onSuccess: () =>
       qc.invalidateQueries({ queryKey: KEYS.teamProject(teamId) }),
   });
 }
 
-// ── POST /api/teams/:teamId/project/submit ────────────────────────────────────
+// ── POST /api/projects/teams/:teamId/submit ────────────────────────────────────
 
 export function useSubmitProject(teamId: string) {
   const api = useApiClient();
@@ -69,7 +69,7 @@ export function useSubmitProject(teamId: string) {
   return useMutation<Project, Error, void>({
     mutationFn: () =>
       api
-        .post(`/api/teams/${teamId}/project/submit`)
+        .post(`/api/projects/teams/${teamId}/submit`)
         .then((r) => r.data),
     onSuccess: () =>
       qc.invalidateQueries({ queryKey: KEYS.teamProject(teamId) }),

@@ -33,7 +33,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={id}
-            className={`w-full rounded px-3.5 py-2.5 text-[0.93rem] outline-none transition-all duration-200 ${suffix ? "pr-10" : ""} ${className ?? ""}`}
+            className={`w-full rounded-lg px-3.5 py-2.5 text-[0.93rem] outline-none transition-all duration-200 ${suffix ? "pr-10" : ""} ${className ?? ""}`}
             style={{
               background: "var(--sand)",
               border: "1.5px solid var(--stone)",

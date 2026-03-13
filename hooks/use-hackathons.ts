@@ -22,6 +22,7 @@ export function useHackathons() {
   return useQuery<Hackathon[]>({
     queryKey: KEYS.all,
     queryFn: () => apiClient.get("/api/hackathons").then((r) => r.data),
+    retry: false
   });
 }
 

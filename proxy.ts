@@ -3,11 +3,11 @@ import { NextResponse } from "next/server";
 
 export default auth((req) => {
   const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
+  const isLoggedIn = !!req.auth?.user;
   const userRole = (req.auth?.user as any)?.role;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith("/api/auth");
-  const isPublicRoute = ["/", "/login", "/register"].includes(nextUrl.pathname);
+  const isPublicRoute = ["/", "/auth/login", "/auth/register"].includes(nextUrl.pathname);
   const isAdminRoute = nextUrl.pathname.startsWith("/admin");
   const isDashboardRoute = nextUrl.pathname.startsWith("/dashboard");
 
@@ -15,7 +15,7 @@ export default auth((req) => {
   if (isApiAuthRoute) return NextResponse.next();
 
   // Handle authenticated users on login/register pages
-  if (isPublicRoute && isLoggedIn) {
+  if (isPublicRoute && isLoggedIn && nextUrl.pathname !== "/") {
     if (["ADMIN", "ORGANIZER"].includes(userRole)) {
       return NextResponse.redirect(new URL("/admin", nextUrl));
     }
@@ -25,7 +25,7 @@ export default auth((req) => {
   // Protect Admin routes
   if (isAdminRoute) {
     if (!isLoggedIn) {
-      return NextResponse.redirect(new URL("/login", nextUrl));
+      return NextResponse.redirect(new URL("/auth/login", nextUrl));
     }
     if (!["ADMIN", "ORGANIZER"].includes(userRole)) {
       return NextResponse.redirect(new URL("/dashboard", nextUrl));
@@ -36,7 +36,7 @@ export default auth((req) => {
   // Protect Dashboard routes
   if (isDashboardRoute) {
     if (!isLoggedIn) {
-      return NextResponse.redirect(new URL("/login", nextUrl));
+      return NextResponse.redirect(new URL("/auth/login", nextUrl));
     }
     // Admins/Organizers should stay in the admin panel
     if (["ADMIN", "ORGANIZER"].includes(userRole)) {
@@ -44,7 +44,7 @@ export default auth((req) => {
     }
   }
 
-  // Special case: / redirect
+  // Special case: / redirect if logged in
   if (nextUrl.pathname === "/" && isLoggedIn) {
     if (["ADMIN", "ORGANIZER"].includes(userRole)) {
       return NextResponse.redirect(new URL("/admin", nextUrl));
