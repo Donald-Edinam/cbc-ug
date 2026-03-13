@@ -14,6 +14,10 @@ export interface AuthUser {
   avatarUrl: string | null;
   studentId: string | null;
   department: string | null;
+  university: string | null;
+  programOfStudy: string | null;
+  level: string | null;
+  linkedinGithub: string | null;
   emailVerified: boolean;
 }
 

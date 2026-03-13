@@ -74,15 +74,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    jwt({ token, user, trigger, session }: any) {
       if (user) {
         token.id = user.id;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const u = user as any;
-        token.role = u.role;
-        (token as any).emailVerified = u.emailVerified ?? false;
-        token.accessToken = u.accessToken;
-        token.refreshToken = u.refreshToken;
+        token.role = user.role;
+        token.emailVerified = user.emailVerified ?? false;
+        token.accessToken = user.accessToken;
+        token.refreshToken = user.refreshToken;
+      }
+      // Called by session.update({ accessToken, refreshToken }) in the refresh interceptor
+      if (trigger === "update" && session?.accessToken) {
+        token.accessToken = session.accessToken;
+        token.refreshToken = session.refreshToken;
       }
       return token;
     },

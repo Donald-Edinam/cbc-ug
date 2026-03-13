@@ -4,16 +4,24 @@ import { apiClient, createAuthClient } from "@/lib/api-client";
 import type { AxiosInstance } from "axios";
 
 /**
- * Returns an axios instance that carries the current session's access token.
- * Falls back to the public (unauthenticated) client when there is no session.
+ * Returns an authenticated axios instance that automatically refreshes the
+ * access token on 401 and updates the NextAuth session with the new tokens.
+ * Falls back to the public client when there is no session.
  */
 export function useApiClient(): AxiosInstance {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
+
   return useMemo(
-    () =>
-      session?.user?.accessToken
-        ? createAuthClient(session.user.accessToken)
-        : apiClient,
+    () => {
+      if (!session?.user?.accessToken) return apiClient;
+      return createAuthClient(
+        session.user.accessToken,
+        session.user.refreshToken ?? "",
+        (tokens) => update(tokens),
+      );
+    },
+    // Re-create only when the access token changes (after a refresh the session updates)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [session?.user?.accessToken],
   );
 }

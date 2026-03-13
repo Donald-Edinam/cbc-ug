@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import { useSession } from "next-auth/react";
 import {
   Users, Plus, LogIn, Copy, Check, ChevronRight,
-  CalendarDays, Clock, LogOut, Loader2, AlertCircle,
-  ShieldCheck,
+  CalendarDays, Clock, Loader2, AlertCircle, FolderOpen,
 } from "lucide-react";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useHackathons } from "@/hooks/use-hackathons";
@@ -35,12 +34,7 @@ function fmt(dateStr: string) {
 }
 
 export default function DashboardPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status === "unauthenticated") router.replace("/login");
-  }, [status, router]);
+  const { data: session } = useSession();
 
   // ── Data ──────────────────────────────────────────────────────────────────
 
@@ -57,7 +51,7 @@ export default function DashboardPage() {
     );
   }, [hackathons, selectedHackathonId]);
 
-  const { data: teams = [], isLoading: loadingTeams } = useHackathonTeams(activeHackathon?.id ?? "");
+  const { data: teams = [] } = useHackathonTeams(activeHackathon?.id ?? "");
 
   const myTeam = useMemo(
     () => teams.find((t) => t.members.some((m) => m.user.id === session?.user?.id)) ?? null,
@@ -112,9 +106,9 @@ export default function DashboardPage() {
 
   // ── Loading guard ─────────────────────────────────────────────────────────
 
-  if (status === "loading" || loadingHackathons) {
+  if (loadingHackathons) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--cream)" }}>
+      <div className="flex items-center justify-center py-24">
         <Loader2 size={22} className="animate-spin" style={{ color: "var(--earth)" }} />
       </div>
     );
@@ -123,49 +117,6 @@ export default function DashboardPage() {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--cream)" }}>
-      {/* Top nav */}
-      <header
-        className="sticky top-0 z-20 flex items-center justify-between px-6 py-3.5 border-b"
-        style={{ background: "var(--warm-white)", borderColor: "var(--sand)" }}
-      >
-        <div className="flex items-center gap-2.5">
-          <div
-            className="w-7 h-7 rounded-full flex items-center justify-center text-[0.6rem] font-bold tracking-wider shrink-0"
-            style={{ background: "var(--claude-tan)", color: "#fff", fontFamily: "var(--font-display)" }}
-          >
-            CBC
-          </div>
-          <span className="text-[0.82rem] font-semibold hidden sm:block"
-            style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
-            Claude Builders&apos; Club
-          </span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <span className="text-[0.8rem] hidden sm:block" style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
-            {session?.user?.name}
-          </span>
-          {["ADMIN", "ORGANIZER"].includes(session?.user?.role ?? "") && (
-            <a
-              href="/admin/hackathons"
-              className="flex items-center gap-1.5 text-[0.78rem] font-medium px-3 py-1.5 rounded-lg"
-              style={{ color: "var(--claude-tan)", fontFamily: "var(--font-display)", background: "var(--tag-ai-bg)", textDecoration: "none" }}
-            >
-              <ShieldCheck size={13} /> Admin
-            </a>
-          )}
-          <button
-            onClick={() => signOut({ callbackUrl: "/login" })}
-            className="flex items-center gap-1.5 text-[0.78rem] font-medium px-3 py-1.5 rounded-lg transition-colors"
-            style={{ color: "var(--earth)", fontFamily: "var(--font-display)", background: "transparent", border: "none", cursor: "pointer" }}
-          >
-            <LogOut size={13} />
-            Sign out
-          </button>
-        </div>
-      </header>
-
       <main className="max-w-3xl mx-auto px-5 py-10">
         {/* Welcome */}
         <div className="mb-8">
@@ -314,6 +265,26 @@ export default function DashboardPage() {
                   ))}
                 </div>
 
+                {/* Project link */}
+                <Link
+                  href="/dashboard/project"
+                  className="flex items-center justify-between rounded-xl px-4 py-3 mb-3 transition-colors"
+                  style={{ background: "var(--tag-ai-bg)", border: "1px solid var(--claude-tan)", textDecoration: "none" }}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <FolderOpen size={15} style={{ color: "var(--claude-tan)" }} />
+                    <span className="text-[0.88rem] font-semibold"
+                      style={{ color: "var(--ink)", fontFamily: "var(--font-display)" }}>
+                      {myTeam.project?.submittedAt
+                        ? "View submitted project"
+                        : myTeam.project
+                        ? "Continue project draft"
+                        : "Start your project"}
+                    </span>
+                  </div>
+                  <ChevronRight size={14} style={{ color: "var(--claude-tan)" }} />
+                </Link>
+
                 {/* Invite code */}
                 {inviteCode && (
                   <div
@@ -446,80 +417,8 @@ export default function DashboardPage() {
               </div>
             )}
 
-            {/* All teams */}
-            <div>
-              <h3 className="text-[0.78rem] font-semibold uppercase tracking-wider mb-3"
-                style={{ color: "var(--earth)", fontFamily: "var(--font-display)" }}>
-                All teams ({teams.length})
-              </h3>
-
-              {loadingTeams ? (
-                <div className="flex items-center gap-2 py-4 text-[0.85rem]"
-                  style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
-                  <Loader2 size={14} className="animate-spin" />
-                  Loading teams…
-                </div>
-              ) : teams.length === 0 ? (
-                <div
-                  className="rounded-2xl border px-6 py-6 text-center"
-                  style={{ background: "var(--warm-white)", borderColor: "var(--sand)" }}
-                >
-                  <p className="text-[0.88rem]" style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
-                    No teams yet — be the first to create one.
-                  </p>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-2.5">
-                  {teams.map((team) => {
-                    const isMyTeam = team.id === myTeam?.id;
-                    const full = team._count.members >= activeHackathon.maxTeamSize;
-                    return (
-                      <div
-                        key={team.id}
-                        className="flex items-center justify-between rounded-xl border px-5 py-4"
-                        style={{
-                          background: isMyTeam ? "var(--tag-ai-bg)" : "var(--warm-white)",
-                          borderColor: isMyTeam ? "var(--claude-tan)" : "var(--sand)",
-                        }}
-                      >
-                        <div>
-                          <div className="flex items-center gap-2 mb-0.5">
-                            <span className="text-[0.9rem] font-semibold"
-                              style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
-                              {team.name}
-                            </span>
-                            {isMyTeam && (
-                              <span className="text-[0.68rem] font-semibold px-2 py-0.5 rounded-full"
-                                style={{ background: "var(--claude-tan)", color: "#fff", fontFamily: "var(--font-display)" }}>
-                                your team
-                              </span>
-                            )}
-                          </div>
-                          {team.description && (
-                            <p className="text-[0.8rem]" style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
-                              {team.description}
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-3 shrink-0 ml-4">
-                          <span className="flex items-center gap-1.5 text-[0.75rem]"
-                            style={{ color: full ? "var(--earth)" : "var(--ink)", fontFamily: "var(--font-display)" }}>
-                            <Users size={12} strokeWidth={1.8} />
-                            {team._count.members}/{activeHackathon.maxTeamSize}
-                          </span>
-                          {!isMyTeam && (
-                            <ChevronRight size={14} style={{ color: "var(--earth)" }} />
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
           </div>
         )}
       </main>
-    </div>
   );
 }

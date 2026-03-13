@@ -1,0 +1,137 @@
+"use client";
+
+import { useMemo } from "react";
+import { useSession } from "next-auth/react";
+import { Loader2, Bell, Megaphone } from "lucide-react";
+import { useHackathons, useHackathon } from "@/hooks/use-hackathons";
+
+function fmt(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-GB", {
+    day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
+  });
+}
+
+export default function AnnouncementsPage() {
+  const { data: session } = useSession();
+
+  const { data: hackathons = [], isLoading: loadingHackathons } = useHackathons();
+
+  const activeHackathon = useMemo(
+    () =>
+      hackathons.find((h) => h.status === "REGISTRATION_OPEN") ??
+      hackathons.find((h) => h.status === "IN_PROGRESS") ??
+      hackathons[0] ?? null,
+    [hackathons],
+  );
+
+  const { data: hackathonDetail, isLoading: loadingDetail } = useHackathon(
+    activeHackathon?.id ?? "",
+  );
+
+  const announcements = hackathonDetail?.announcements ?? [];
+
+  if (loadingHackathons || loadingDetail) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <Loader2 size={22} className="animate-spin" style={{ color: "var(--earth)" }} />
+      </div>
+    );
+  }
+
+  return (
+    <main className="max-w-2xl mx-auto px-5 py-10">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-[1.75rem] font-semibold leading-tight mb-1"
+          style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
+          Announcements
+        </h1>
+        <p className="text-[0.88rem]" style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
+          {activeHackathon
+            ? `Updates for ${activeHackathon.title}`
+            : "No active hackathon"}
+        </p>
+      </div>
+
+      {/* No hackathon */}
+      {!activeHackathon && (
+        <div
+          className="rounded-2xl border px-8 py-10 text-center"
+          style={{ background: "var(--warm-white)", borderColor: "var(--sand)" }}
+        >
+          <p className="text-[0.9rem] font-semibold mb-1"
+            style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
+            No active hackathon
+          </p>
+          <p className="text-[0.85rem]" style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
+            Announcements will appear here once a hackathon is live.
+          </p>
+        </div>
+      )}
+
+      {/* Empty announcements */}
+      {activeHackathon && announcements.length === 0 && (
+        <div
+          className="rounded-2xl border px-8 py-12 text-center flex flex-col items-center gap-3"
+          style={{ background: "var(--warm-white)", borderColor: "var(--sand)" }}
+        >
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center"
+            style={{ background: "var(--sand)" }}
+          >
+            <Bell size={20} style={{ color: "var(--earth)" }} />
+          </div>
+          <div>
+            <p className="text-[0.9rem] font-semibold mb-1"
+              style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
+              No announcements yet
+            </p>
+            <p className="text-[0.85rem]" style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
+              Check back here for updates from the organizers.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Announcements list */}
+      {announcements.length > 0 && (
+        <div className="flex flex-col gap-4">
+          {[...announcements]
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .map((ann) => (
+              <div
+                key={ann.id}
+                className="rounded-2xl border px-6 py-5"
+                style={{ background: "var(--warm-white)", borderColor: "var(--sand)" }}
+              >
+                <div className="flex items-start gap-3">
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                    style={{ background: "var(--tag-ai-bg)" }}
+                  >
+                    <Megaphone size={14} style={{ color: "var(--claude-tan)" }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <h3 className="text-[0.95rem] font-semibold"
+                        style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
+                        {ann.title}
+                      </h3>
+                      <span className="text-[0.72rem] shrink-0"
+                        style={{ color: "var(--stone)", fontFamily: "var(--font-display)" }}>
+                        {fmt(ann.createdAt)}
+                      </span>
+                    </div>
+                    <p className="text-[0.88rem] leading-relaxed whitespace-pre-wrap"
+                      style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
+                      {ann.body}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+        </div>
+      )}
+    </main>
+  );
+}
