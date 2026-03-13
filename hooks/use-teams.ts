@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
 import { useApiClient } from "./use-api-client";
+import { useSession } from "next-auth/react";
 import type { Team, CreateTeamInput } from "@/lib/types";
 
 const KEYS = {
@@ -37,11 +38,12 @@ export function useTeam(id: string) {
 
 export function useTeamInviteCode(teamId: string) {
   const api = useApiClient();
+  const { data: session } = useSession();
   return useQuery<{ inviteCode: string }>({
     queryKey: KEYS.invite(teamId),
     queryFn: () =>
       api.get(`/api/teams/${teamId}/invite`).then((r) => r.data),
-    enabled: Boolean(teamId),
+    enabled: Boolean(teamId) && !!session?.user?.accessToken,
   });
 }
 

@@ -1,7 +1,6 @@
 "use client";
 
-import { useHackathons } from "@/hooks/use-hackathons";
-import { useAdminUsers } from "@/hooks/use-admin";
+import { useAdminStats } from "@/hooks/use-admin-stats";
 import { 
   Trophy, 
   Users, 
@@ -16,14 +15,16 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 export default function AdminDashboardPage() {
-  const { data: hackathons = [], isLoading: loadingHackathons } = useHackathons();
-  const { data: users = [], isLoading: loadingUsers } = useAdminUsers();
+  const { data: statsData, isLoading } = useAdminStats();
 
   const stats = useMemo(() => {
+    if (!statsData) return [];
+    
     return [
       {
         label: "Total Hackathons",
-        value: hackathons.length,
+        value: statsData.hackathons.total,
+        trend: statsData.hackathons.trend,
         icon: Trophy,
         color: "var(--claude-tan)",
         bg: "var(--tag-ai-bg)",
@@ -31,30 +32,46 @@ export default function AdminDashboardPage() {
       },
       {
         label: "Registered Users",
-        value: users.length,
+        value: statsData.users.total,
+        trend: statsData.users.trend,
         icon: Users,
         color: "#4a6940",
         bg: "#f1f8f1",
         link: "/admin/users"
       },
       {
-        label: "Active Projects",
-        value: "...", // Would need a useAllProjects hook for total count across all hackathons
+        label: "Projects Submitted",
+        value: statsData.projects.total,
+        trend: statsData.projects.trend,
         icon: Rocket,
         color: "#b45c1a",
         bg: "#fdf5f0",
         link: "/admin/projects"
       },
       {
-        label: "Judged Projects",
-        value: "...", // Placeholder
+        label: "Projects Judged",
+        value: statsData.judgedProjects.total,
+        trend: statsData.judgedProjects.trend,
         icon: Gavel,
         color: "#6b50a8",
         bg: "#f4f2fa",
         link: "/admin/judging"
       },
     ];
-  }, [hackathons.length, users.length]);
+  }, [statsData]);
+
+  const recentHackathons = statsData?.recentHackathons || [];
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-4 border-sand border-t-ink rounded-full animate-spin" />
+          <p className="text-sm font-medium text-earth">Syncing dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto flex flex-col gap-8">
@@ -100,7 +117,11 @@ export default function AdminDashboardPage() {
                     style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
                     {stat.value}
                   </p>
-                  <span className="text-[0.65rem] font-bold px-1.5 py-0.5 rounded bg-green-100 text-green-700">+12%</span>
+                  <span className={`text-[0.65rem] font-bold px-1.5 py-0.5 rounded shadow-sm ${
+                    stat.trend >= 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                  }`}>
+                    {stat.trend >= 0 ? "+" : ""}{stat.trend}%
+                  </span>
                 </div>
               </div>
             </div>
@@ -130,57 +151,56 @@ export default function AdminDashboardPage() {
                 </button>
               </Link>
             </div>
-            <div className="divide-y" style={{ borderColor: "var(--sand)" }}>
-              {loadingHackathons ? (
-                <div className="p-12 text-center text-earth text-sm flex-col items-center gap-2 flex-1 flex justify-center">
-                  <div className="w-5 h-5 border-2 border-sand border-t-earth rounded-full animate-spin" />
-                  Syncing hackathon data...
-                </div>
-              ) : hackathons.length === 0 ? (
+            <div className="divide-y flex-1 flex flex-col" style={{ borderColor: "var(--sand)" }}>
+              {recentHackathons.length === 0 ? (
                 <div className="p-12 text-center text-earth text-sm italic flex-1 flex items-center justify-center">No hackathons exist yet. Build something amazing!</div>
               ) : (
-                hackathons.slice(0, 4).map((h) => (
-                  <Link 
-                    key={h.id} 
-                    href={`/admin/hackathons?id=${h.id}`}
-                    className="flex items-center justify-between p-5 hover:bg-cream/50 transition-colors group"
-                  >
-                    <div className="flex items-center gap-5">
-                      <div className="w-12 h-12 rounded-xl bg-sand/50 flex items-center justify-center text-ink font-bold text-lg border border-sand">
-                        {h.title.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="text-[0.95rem] font-bold group-hover:text-ink transition-colors" style={{ color: "var(--ink)" }}>{h.title}</p>
-                        <div className="flex items-center gap-3 mt-0.5">
-                          <span className="text-[0.72rem] text-earth flex items-center gap-1 font-medium">
-                            <Users size={12} /> {h._count?.teams ?? 0} Teams
-                          </span>
-                          <span className="w-1 h-1 rounded-full bg-sand" />
-                          <span className="text-[0.7rem] uppercase tracking-wider font-bold" 
-                            style={{ color: h.status === "REGISTRATION_OPEN" ? "#4a6940" : "var(--earth)" }}>
-                            {h.status.replace("_", " ")}
-                          </span>
+                <>
+                  <div className="flex-1">
+                    {recentHackathons.map((h) => (
+                      <Link 
+                        key={h.id} 
+                        href={`/admin/hackathons?id=${h.id}`}
+                        className="flex items-center justify-between p-5 hover:bg-cream/50 transition-colors group"
+                      >
+                        <div className="flex items-center gap-5">
+                          <div className="w-12 h-12 rounded-xl bg-sand/50 flex items-center justify-center text-ink font-bold text-lg border border-sand">
+                            {h.title.charAt(0)}
+                          </div>
+                          <div>
+                            <p className="text-[0.95rem] font-bold group-hover:text-ink transition-colors" style={{ color: "var(--ink)" }}>{h.title}</p>
+                            <div className="flex items-center gap-3 mt-0.5">
+                              <span className="text-[0.72rem] text-earth flex items-center gap-1 font-medium">
+                                <Users size={12} /> {h._count?.teams ?? 0} Teams
+                              </span>
+                              <span className="w-1 h-1 rounded-full bg-sand" />
+                              <span className="text-[0.7rem] uppercase tracking-wider font-bold" 
+                                style={{ color: h.status === "REGISTRATION_OPEN" ? "#4a6940" : "var(--earth)" }}>
+                                {h.status.replace("_", " ")}
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="hidden sm:flex flex-col items-end">
-                        <p className="text-[0.65rem] font-bold uppercase tracking-wider text-earth">Ends</p>
-                        <p className="text-[0.75rem] font-medium">{new Date(h.endDate).toLocaleDateString()}</p>
-                      </div>
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center bg-sand/30 group-hover:bg-sand transition-colors">
-                        <ChevronRight size={14} className="text-earth group-hover:translate-x-0.5 transition-transform" />
-                      </div>
-                    </div>
-                  </Link>
-                ))
+                        <div className="flex items-center gap-3">
+                          <div className="hidden sm:flex flex-col items-end">
+                            <p className="text-[0.65rem] font-bold uppercase tracking-wider text-earth">Ends</p>
+                            <p className="text-[0.75rem] font-medium">{new Date(h.endDate).toLocaleDateString()}</p>
+                          </div>
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center bg-sand/30 group-hover:bg-sand transition-colors">
+                            <ChevronRight size={14} className="text-earth group-hover:translate-x-0.5 transition-transform" />
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                  {statsData && statsData.hackathons.total > 4 && (
+                    <Link href="/admin/hackathons" className="block p-4 text-center text-[0.8rem] font-bold bg-sand/10 hover:bg-sand/20 transition-colors text-earth uppercase tracking-widest border-t" style={{ borderColor: "var(--sand)" }}>
+                      View {statsData.hackathons.total - 4} More Hackathons
+                    </Link>
+                  )}
+                </>
               )}
             </div>
-            {hackathons.length > 4 && (
-              <Link href="/admin/hackathons" className="block p-4 text-center text-[0.8rem] font-bold bg-sand/10 hover:bg-sand/20 transition-colors text-earth uppercase tracking-widest border-t" style={{ borderColor: "var(--sand)" }}>
-                View {hackathons.length - 4} More Hackathons
-              </Link>
-            )}
           </div>
         </div>
 

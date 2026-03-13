@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
 import { useApiClient } from "./use-api-client";
+import { useSession } from "next-auth/react";
 import type {
   Hackathon,
   JudgingCriteria,
@@ -52,10 +53,12 @@ export function useCreateCriteria(hackathonId: string) {
 
 export function useJudgeAssignments() {
   const api = useApiClient();
+  const { data: session } = useSession();
   return useQuery<Hackathon[]>({
     queryKey: KEYS.judgeAssignments,
     queryFn: () =>
       api.get("/api/judge/assignments").then((r) => r.data),
+    enabled: !!session?.user?.accessToken,
   });
 }
 
@@ -63,13 +66,14 @@ export function useJudgeAssignments() {
 
 export function useJudgeProjects(hackathonId: string) {
   const api = useApiClient();
+  const { data: session } = useSession();
   return useQuery<Project[]>({
     queryKey: KEYS.judgeProjects(hackathonId),
     queryFn: () =>
       api
         .get(`/api/judge/projects/${hackathonId}`)
         .then((r) => r.data),
-    enabled: Boolean(hackathonId),
+    enabled: Boolean(hackathonId) && !!session?.user?.accessToken,
   });
 }
 
@@ -94,13 +98,14 @@ export function useSubmitScore(hackathonId?: string) {
 
 export function useHackathonScores(hackathonId: string) {
   const api = useApiClient();
+  const { data: session } = useSession();
   return useQuery<Score[]>({
     queryKey: KEYS.scores(hackathonId),
     queryFn: () =>
       api
         .get(`/api/hackathons/${hackathonId}/scores`)
         .then((r) => r.data),
-    enabled: Boolean(hackathonId),
+    enabled: Boolean(hackathonId) && !!session?.user?.accessToken,
   });
 }
 

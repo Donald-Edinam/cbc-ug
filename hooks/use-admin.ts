@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useApiClient } from "./use-api-client";
+import { useSession } from "next-auth/react";
 import type {
   Hackathon,
   AdminUser,
@@ -17,9 +18,11 @@ const KEYS = {
 
 export function useAdminHackathons() {
   const api = useApiClient();
+  const { data: session } = useSession();
   return useQuery<Hackathon[]>({
     queryKey: KEYS.hackathons,
     queryFn: () => api.get("/api/admin/hackathons").then((r) => r.data),
+    enabled: !!session?.user?.accessToken,
   });
 }
 
@@ -27,9 +30,11 @@ export function useAdminHackathons() {
 
 export function useAdminUsers() {
   const api = useApiClient();
+  const { data: session } = useSession();
   return useQuery<AdminUser[]>({
     queryKey: KEYS.users,
     queryFn: () => api.get("/api/admin/users").then((r) => r.data),
+    enabled: !!session?.user?.accessToken,
   });
 }
 

@@ -219,6 +219,34 @@ export interface AdminUser {
   createdAt: string;
 }
 
+export interface AdminDashboardHackathon {
+  id: string;
+  title: string;
+  status: HackathonStatus;
+  endDate: string;
+  _count: { teams: number };
+}
+
+export interface AdminStats {
+  hackathons: {
+    total: number;
+    trend: number;
+  };
+  users: {
+    total: number;
+    trend: number;
+  };
+  projects: {
+    total: number;
+    trend: number;
+  };
+  judgedProjects: {
+    total: number;
+    trend: number;
+  };
+  recentHackathons: AdminDashboardHackathon[];
+}
+
 export interface Announcement {
   id: string;
   hackathonId: string;

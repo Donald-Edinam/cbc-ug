@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
 import { useApiClient } from "./use-api-client";
+import { useSession } from "next-auth/react";
 import type { Project, UpsertProjectInput } from "@/lib/types";
 
 const KEYS = {
@@ -37,11 +38,12 @@ export function usePublicProjects() {
 
 export function useTeamProject(teamId: string) {
   const api = useApiClient();
+  const { data: session } = useSession();
   return useQuery<Project>({
     queryKey: KEYS.teamProject(teamId),
     queryFn: () =>
       api.get(`/api/teams/${teamId}/project`).then((r) => r.data),
-    enabled: Boolean(teamId),
+    enabled: Boolean(teamId) && !!session?.user?.accessToken,
     retry: false,
   });
 }

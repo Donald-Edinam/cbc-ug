@@ -35,6 +35,7 @@
   --tag-data-c: #5c4a6e;
   --tag-mobile-bg: #ddd8cc;
   --tag-mobile-c: #5b5030;
+  --sand-light: #f8f6f2; /* Light mode highlighting */
 }
 
 [data-theme="dark"] {
@@ -64,6 +65,7 @@
   --tag-data-c: #b8a0d0;
   --tag-mobile-bg: #302818;
   --tag-mobile-c: #c4a870;
+  --sand-light: #3d3b36; /* Dark mode highlighting */
 }
 
 /* ─── Tailwind v4 font tokens ─── */
