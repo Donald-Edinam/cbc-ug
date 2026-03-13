@@ -127,7 +127,7 @@ function LoginForm() {
                 We sent an access link to <strong>{email}</strong>. Click it to sign in.
               </p>
               <p className="text-[0.78rem] mt-2" style={{ color: "var(--stone)", fontFamily: "var(--font-body)" }}>
-                The link expires in 15 minutes.
+                The link expires in 30 days.
               </p>
             </div>
             <button
