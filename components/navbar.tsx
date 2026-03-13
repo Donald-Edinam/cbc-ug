@@ -71,7 +71,7 @@ export default function Navbar() {
           </ul>
 
           <div className={styles.navCtaWrap}>
-            <a href="#join" className={styles.navCta}>
+            <a href="/register" className={styles.navCta}>
               Join the Club
             </a>
           </div>
@@ -111,7 +111,7 @@ export default function Navbar() {
           </a>
         ))}
         <a
-          href="#join"
+          href="/register"
           className={`${styles.mobileLink} ${styles.mobileCta}`}
           onClick={closeMobile}
         >

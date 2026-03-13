@@ -109,9 +109,7 @@ export default function HackathonPage() {
 
             <div className={styles.heroActions}>
               <a
-                href="https://www.jotform.com/253555944387168"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/register"
                 className={styles.btnPrimary}
               >
                 Register Now <ArrowRight size={16} strokeWidth={2} />

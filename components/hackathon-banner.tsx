@@ -56,9 +56,7 @@ export default function HackathonBanner() {
             </p>
             <div className={styles.hackathonCtaRow}>
               <a
-                href="https://www.jotform.com/253555944387168"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/register"
                 className={styles.hackathonCta}
               >
                 Register Now <ArrowRight size={16} strokeWidth={2} />

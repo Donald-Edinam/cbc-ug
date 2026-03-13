@@ -32,7 +32,7 @@ export default function Hero() {
           </p>
 
           <div className={styles.heroActions} data-gsap="hero-actions">
-            <a href="#join" className={styles.btnPrimary}>
+            <a href="/register" className={styles.btnPrimary}>
               Join the Club <span>&rarr;</span>
             </a>
             <a href="#projects" className={styles.btnSecondary}>

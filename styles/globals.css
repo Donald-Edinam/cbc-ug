@@ -1,3 +1,77 @@
+@import "tailwindcss";
+
+/* ─── Design tokens — defined here so every route has access ─── */
+:root {
+  --cream: #ede9e0;
+  --warm-white: #e5e1d8;
+  --sand: #d6d2c9;
+  --stone: #a4a19b;
+  --earth: #838079;
+  --bark: #5b5954;
+  --ink: #1b1a18;
+  --ink-soft: #2e2c29;
+  --claude-tan: #d97c5d;
+  --claude-amber: #c26a4d;
+  --claude-deep: #b05e43;
+  --accent-warm: #e8b8a4;
+  --font-display: 'anthropicSans', system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --font-body: 'anthropicSerif', Georgia, 'Times New Roman', Times, serif;
+  --max-w: 1200px;
+  --section-py: clamp(100px, 12vw, 160px);
+  --nav-h: 80px;
+  --radius-card: 16px;
+  --radius-btn: 100px;
+  --nav-bg: rgba(237, 233, 224, 0.55);
+  --nav-border: rgba(255, 255, 255, 0.55);
+  --nav-scrolled-shadow: rgba(27, 26, 24, 0.06);
+  --card-hover-shadow: 0 12px 40px rgba(27, 26, 24, 0.09);
+  --tag-ai-bg: #e4cbc2;
+  --tag-ai-c: var(--claude-deep);
+  --tag-web-bg: #c8d8e4;
+  --tag-web-c: #3a5c78;
+  --tag-hack-bg: #cce0cc;
+  --tag-hack-c: #4a6940;
+  --tag-data-bg: #d8d0e4;
+  --tag-data-c: #5c4a6e;
+  --tag-mobile-bg: #ddd8cc;
+  --tag-mobile-c: #5b5030;
+}
+
+[data-theme="dark"] {
+  --cream: #1b1a18;
+  --warm-white: #252320;
+  --sand: #333129;
+  --stone: #5b5954;
+  --earth: #838079;
+  --bark: #a4a19b;
+  --ink: #ede9e0;
+  --ink-soft: #e5e1d8;
+  --claude-tan: #d97c5d;
+  --claude-amber: #c26a4d;
+  --claude-deep: #d97c5d;
+  --accent-warm: #3d2318;
+  --nav-bg: rgba(27, 26, 24, 0.6);
+  --nav-border: rgba(255, 255, 255, 0.08);
+  --nav-scrolled-shadow: rgba(0, 0, 0, 0.24);
+  --card-hover-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
+  --tag-ai-bg: #3d2318;
+  --tag-ai-c: #d97c5d;
+  --tag-web-bg: #1e2a36;
+  --tag-web-c: #8ab4d8;
+  --tag-hack-bg: #1e2e1a;
+  --tag-hack-c: #8ac470;
+  --tag-data-bg: #28203a;
+  --tag-data-c: #b8a0d0;
+  --tag-mobile-bg: #302818;
+  --tag-mobile-c: #c4a870;
+}
+
+/* ─── Tailwind v4 font tokens ─── */
+@theme {
+  --font-display: 'anthropicSans', system-ui, sans-serif;
+  --font-body: 'anthropicSerif', Georgia, serif;
+}
+
 @font-face {
   font-family: 'anthropicSans';
   src: url('/fonts/anthropicSans-normal.woff2') format('woff2');
@@ -34,12 +108,14 @@
   font-feature-settings: 'dlig' 0;
 }
 
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@layer base {
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 }
 
 html {
