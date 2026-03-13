@@ -41,7 +41,9 @@ export function BannerUpload({ onUpload, defaultValue }: BannerUploadProps) {
       formData.append("timestamp", signData.timestamp);
       formData.append("signature", signData.signature);
       formData.append("folder", signData.folder);
-      formData.append("upload_preset", signData.uploadPreset);
+      if (signData.uploadPreset) {
+        formData.append("upload_preset", signData.uploadPreset);
+      }
 
       const cloudUrl = `https://api.cloudinary.com/v1_1/${signData.cloudName}/image/upload`;
       const { data: uploadResult } = await axios.post(cloudUrl, formData);
@@ -51,7 +53,8 @@ export function BannerUpload({ onUpload, defaultValue }: BannerUploadProps) {
       onUpload(uploadedUrl);
     } catch (err: any) {
       console.error("Upload failed", err);
-      setError("Failed to upload image. Please check your connection.");
+      const serverError = err.response?.data?.error?.message;
+      setError(serverError ? `Cloudinary: ${serverError}` : "Failed to upload image. Please check your connection.");
     } finally {
       setLoading(false);
     }

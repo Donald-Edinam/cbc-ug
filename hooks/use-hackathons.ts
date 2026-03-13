@@ -26,6 +26,15 @@ export function useHackathons() {
   });
 }
 
+export function useAdminHackathons() {
+  const api = useApiClient();
+  return useQuery<Hackathon[]>({
+    queryKey: [...KEYS.all, "admin"],
+    queryFn: () => api.get("/api/admin/hackathons").then((r) => r.data),
+    retry: false
+  });
+}
+
 // ── GET /api/hackathons/:id ───────────────────────────────────────────────────
 
 export function useHackathon(id: string) {

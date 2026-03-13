@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Plus, Pencil, Trash2, ChevronDown, Loader2, AlertCircle, X, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
-  useHackathons, 
+  useAdminHackathons, 
   useCreateHackathon, 
   useUpdateHackathon, 
   useDeleteHackathon, 
@@ -59,7 +59,7 @@ function fromLocal(local: string) {
 }
 
 export default function AdminHackathonsPage() {
-  const { data: hackathons = [], isLoading } = useHackathons();
+  const { data: hackathons = [], isLoading } = useAdminHackathons();
 
   console.log("Logging hackathon", hackathons);
 
