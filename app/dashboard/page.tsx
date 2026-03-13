@@ -1,47 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
   Users, Plus, LogIn, Copy, Check, ChevronRight,
   CalendarDays, Clock, LogOut, Loader2, AlertCircle,
+  ShieldCheck,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
-
-type HackathonStatus = "REGISTRATION_OPEN" | "IN_PROGRESS" | "JUDGING" | "COMPLETED";
-
-interface Hackathon {
-  id: string;
-  title: string;
-  theme: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  registrationDeadline: string;
-  maxTeamSize: number;
-  minTeamSize: number;
-  status: HackathonStatus;
-}
-
-interface TeamMember {
-  id: string;
-  role: "LEADER" | "MEMBER";
-  user: { id: string; name: string; avatarUrl: string | null };
-}
-
-interface Team {
-  id: string;
-  name: string;
-  description: string | null;
-  _count: { members: number };
-  members: TeamMember[];
-}
+import { useHackathons } from "@/hooks/use-hackathons";
+import { useHackathonTeams, useCreateTeam, useJoinTeam, useTeamInviteCode } from "@/hooks/use-teams";
+import type { HackathonStatus } from "@/lib/types";
 
 const STATUS_LABEL: Record<HackathonStatus, string> = {
+  DRAFT: "Draft",
   REGISTRATION_OPEN: "Registration Open",
   IN_PROGRESS: "In Progress",
   JUDGING: "Judging",
@@ -49,10 +23,11 @@ const STATUS_LABEL: Record<HackathonStatus, string> = {
 };
 
 const STATUS_COLOR: Record<HackathonStatus, { bg: string; color: string }> = {
-  REGISTRATION_OPEN: { bg: "#e8f4e8", color: "#4a6940" },
-  IN_PROGRESS: { bg: "#fef3e8", color: "#b45c1a" },
-  JUDGING: { bg: "#f0edf8", color: "#6b50a8" },
-  COMPLETED: { bg: "var(--sand)", color: "var(--earth)" },
+  DRAFT:             { bg: "var(--sand)",  color: "var(--earth)"   },
+  REGISTRATION_OPEN: { bg: "#e8f4e8",      color: "#4a6940"        },
+  IN_PROGRESS:       { bg: "#fef3e8",      color: "#b45c1a"        },
+  JUDGING:           { bg: "#f0edf8",      color: "#6b50a8"        },
+  COMPLETED:         { bg: "var(--sand)",  color: "var(--earth)"   },
 };
 
 function fmt(dateStr: string) {
@@ -63,128 +38,70 @@ export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  const [hackathons, setHackathons] = useState<Hackathon[]>([]);
-  const [activeHackathon, setActiveHackathon] = useState<Hackathon | null>(null);
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [myTeam, setMyTeam] = useState<Team | null>(null);
-  const [inviteCode, setInviteCode] = useState("");
-  const [copiedInvite, setCopiedInvite] = useState(false);
-  const [loadingHackathons, setLoadingHackathons] = useState(true);
-  const [loadingTeams, setLoadingTeams] = useState(false);
-
-  // Create team state
-  const [showCreate, setShowCreate] = useState(false);
-  const [createName, setCreateName] = useState("");
-  const [createDesc, setCreateDesc] = useState("");
-  const [creating, setCreating] = useState(false);
-  const [createError, setCreateError] = useState("");
-
-  // Join team state
-  const [showJoin, setShowJoin] = useState(false);
-  const [joinCode, setJoinCode] = useState("");
-  const [joining, setJoining] = useState(false);
-  const [joinError, setJoinError] = useState("");
-
   useEffect(() => {
     if (status === "unauthenticated") router.replace("/login");
   }, [status, router]);
 
-  useEffect(() => {
-    if (status !== "authenticated") return;
-    fetch(`${API_URL}/api/hackathons`)
-      .then((r) => r.json())
-      .then((data: Hackathon[]) => {
-        setHackathons(data);
-        const active =
-          data.find((h) => h.status === "REGISTRATION_OPEN") ??
-          data.find((h) => h.status === "IN_PROGRESS") ??
-          data[0] ?? null;
-        setActiveHackathon(active);
-      })
-      .finally(() => setLoadingHackathons(false));
-  }, [status]);
+  // ── Data ──────────────────────────────────────────────────────────────────
 
-  useEffect(() => {
-    if (!activeHackathon) return;
-    setLoadingTeams(true);
-    fetch(`${API_URL}/api/hackathons/${activeHackathon.id}/teams`)
-      .then((r) => r.json())
-      .then((data: Team[]) => {
-        setTeams(data);
-        const mine = data.find((t) =>
-          t.members.some((m) => m.user.id === session?.user?.id)
-        ) ?? null;
-        setMyTeam(mine);
-      })
-      .finally(() => setLoadingTeams(false));
-  }, [activeHackathon, session?.user?.id]);
+  const { data: hackathons = [], isLoading: loadingHackathons } = useHackathons();
 
-  // Fetch invite code for my team
-  useEffect(() => {
-    if (!myTeam || !session?.user?.accessToken) return;
-    fetch(`${API_URL}/api/teams/${myTeam.id}/invite`, {
-      headers: { Authorization: `Bearer ${session.user.accessToken}` },
-    })
-      .then((r) => r.ok ? r.json() : null)
-      .then((d) => { if (d?.inviteCode) setInviteCode(d.inviteCode); });
-  }, [myTeam, session?.user?.accessToken]);
+  const [selectedHackathonId, setSelectedHackathonId] = useState<string | null>(null);
+
+  const activeHackathon = useMemo(() => {
+    if (selectedHackathonId) return hackathons.find((h) => h.id === selectedHackathonId) ?? null;
+    return (
+      hackathons.find((h) => h.status === "REGISTRATION_OPEN") ??
+      hackathons.find((h) => h.status === "IN_PROGRESS") ??
+      hackathons[0] ?? null
+    );
+  }, [hackathons, selectedHackathonId]);
+
+  const { data: teams = [], isLoading: loadingTeams } = useHackathonTeams(activeHackathon?.id ?? "");
+
+  const myTeam = useMemo(
+    () => teams.find((t) => t.members.some((m) => m.user.id === session?.user?.id)) ?? null,
+    [teams, session?.user?.id],
+  );
+
+  const { data: inviteData } = useTeamInviteCode(myTeam?.id ?? "");
+  const inviteCode = inviteData?.inviteCode ?? "";
+
+  // ── Mutations ─────────────────────────────────────────────────────────────
+
+  const createTeam = useCreateTeam(activeHackathon?.id ?? "");
+  const joinTeam = useJoinTeam(activeHackathon?.id);
+
+  // ── Local UI state ────────────────────────────────────────────────────────
+
+  const [showCreate, setShowCreate] = useState(false);
+  const [createName, setCreateName] = useState("");
+  const [createDesc, setCreateDesc] = useState("");
+
+  const [showJoin, setShowJoin] = useState(false);
+  const [joinCode, setJoinCode] = useState("");
+
+  const [copiedInvite, setCopiedInvite] = useState(false);
+
+  // ── Handlers ──────────────────────────────────────────────────────────────
 
   async function handleCreateTeam(e: React.FormEvent) {
     e.preventDefault();
-    if (!activeHackathon || !session?.user?.accessToken) return;
-    setCreating(true);
-    setCreateError("");
     try {
-      const res = await fetch(`${API_URL}/api/hackathons/${activeHackathon.id}/teams`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.user.accessToken}`,
-        },
-        body: JSON.stringify({ name: createName, description: createDesc }),
-      });
-      const data = await res.json();
-      if (!res.ok) { setCreateError(data.error ?? "Could not create team."); return; }
-      // Refresh teams
-      const teamsRes = await fetch(`${API_URL}/api/hackathons/${activeHackathon.id}/teams`);
-      const teamsData = await teamsRes.json();
-      setTeams(teamsData);
-      setMyTeam(teamsData.find((t: Team) => t.members.some((m) => m.user.id === session.user.id)) ?? null);
+      await createTeam.mutateAsync({ name: createName, description: createDesc });
       setShowCreate(false);
       setCreateName("");
       setCreateDesc("");
-    } finally {
-      setCreating(false);
-    }
+    } catch { /* error displayed from mutation state */ }
   }
 
   async function handleJoinTeam(e: React.FormEvent) {
     e.preventDefault();
-    if (!session?.user?.accessToken) return;
-    setJoining(true);
-    setJoinError("");
     try {
-      const res = await fetch(`${API_URL}/api/teams/join`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.user.accessToken}`,
-        },
-        body: JSON.stringify({ inviteCode: joinCode }),
-      });
-      const data = await res.json();
-      if (!res.ok) { setJoinError(data.error ?? "Could not join team."); return; }
-      // Refresh teams
-      if (!activeHackathon) return;
-      const teamsRes = await fetch(`${API_URL}/api/hackathons/${activeHackathon.id}/teams`);
-      const teamsData = await teamsRes.json();
-      setTeams(teamsData);
-      setMyTeam(teamsData.find((t: Team) => t.members.some((m) => m.user.id === session.user.id)) ?? null);
+      await joinTeam.mutateAsync({ inviteCode: joinCode });
       setShowJoin(false);
       setJoinCode("");
-    } finally {
-      setJoining(false);
-    }
+    } catch { /* error displayed from mutation state */ }
   }
 
   function copyInvite() {
@@ -193,6 +110,8 @@ export default function DashboardPage() {
     setTimeout(() => setCopiedInvite(false), 2000);
   }
 
+  // ── Loading guard ─────────────────────────────────────────────────────────
+
   if (status === "loading" || loadingHackathons) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--cream)" }}>
@@ -200,6 +119,8 @@ export default function DashboardPage() {
       </div>
     );
   }
+
+  // ── Render ────────────────────────────────────────────────────────────────
 
   return (
     <div className="min-h-screen" style={{ background: "var(--cream)" }}>
@@ -225,6 +146,15 @@ export default function DashboardPage() {
           <span className="text-[0.8rem] hidden sm:block" style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
             {session?.user?.name}
           </span>
+          {["ADMIN", "ORGANIZER"].includes(session?.user?.role ?? "") && (
+            <a
+              href="/admin/hackathons"
+              className="flex items-center gap-1.5 text-[0.78rem] font-medium px-3 py-1.5 rounded-lg"
+              style={{ color: "var(--claude-tan)", fontFamily: "var(--font-display)", background: "var(--tag-ai-bg)", textDecoration: "none" }}
+            >
+              <ShieldCheck size={13} /> Admin
+            </a>
+          )}
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
             className="flex items-center gap-1.5 text-[0.78rem] font-medium px-3 py-1.5 rounded-lg transition-colors"
@@ -249,6 +179,28 @@ export default function DashboardPage() {
               : "Join or create a team to get started."}
           </p>
         </div>
+
+        {/* Hackathon switcher (when multiple) */}
+        {hackathons.length > 1 && (
+          <div className="flex items-center gap-2 mb-6 flex-wrap">
+            {hackathons.map((h) => (
+              <button
+                key={h.id}
+                onClick={() => setSelectedHackathonId(h.id)}
+                className="flex items-center gap-1.5 text-[0.78rem] font-semibold px-3.5 py-1.5 rounded-full border transition-all"
+                style={{
+                  background: activeHackathon?.id === h.id ? "var(--ink)" : "var(--warm-white)",
+                  color: activeHackathon?.id === h.id ? "var(--cream)" : "var(--ink)",
+                  borderColor: activeHackathon?.id === h.id ? "var(--ink)" : "var(--sand)",
+                  cursor: "pointer",
+                  fontFamily: "var(--font-display)",
+                }}
+              >
+                {h.title}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* No hackathons */}
         {!activeHackathon && (
@@ -440,11 +392,11 @@ export default function DashboardPage() {
                 {/* Create form */}
                 {showCreate && (
                   <form onSubmit={handleCreateTeam} className="flex flex-col gap-3 pt-3 border-t" style={{ borderColor: "var(--sand)" }}>
-                    {createError && (
+                    {createTeam.error && (
                       <div className="flex items-center gap-2 text-[0.82rem] px-3 py-2.5 rounded-xl"
                         style={{ background: "var(--tag-ai-bg)", color: "var(--claude-deep)", fontFamily: "var(--font-body)" }}>
                         <AlertCircle size={13} className="shrink-0" />
-                        {createError}
+                        {createTeam.error.message}
                       </div>
                     )}
                     <Input
@@ -462,7 +414,7 @@ export default function DashboardPage() {
                       onChange={(e) => setCreateDesc(e.target.value)}
                       placeholder="What are you building?"
                     />
-                    <Button type="submit" loading={creating} loadingText="Creating…">
+                    <Button type="submit" loading={createTeam.isPending} loadingText="Creating…">
                       Create team
                     </Button>
                   </form>
@@ -471,11 +423,11 @@ export default function DashboardPage() {
                 {/* Join form */}
                 {showJoin && (
                   <form onSubmit={handleJoinTeam} className="flex flex-col gap-3 pt-3 border-t" style={{ borderColor: "var(--sand)" }}>
-                    {joinError && (
+                    {joinTeam.error && (
                       <div className="flex items-center gap-2 text-[0.82rem] px-3 py-2.5 rounded-xl"
                         style={{ background: "var(--tag-ai-bg)", color: "var(--claude-deep)", fontFamily: "var(--font-body)" }}>
                         <AlertCircle size={13} className="shrink-0" />
-                        {joinError}
+                        {joinTeam.error.message}
                       </div>
                     )}
                     <Input
@@ -486,7 +438,7 @@ export default function DashboardPage() {
                       onChange={(e) => setJoinCode(e.target.value)}
                       placeholder="Paste the invite code here"
                     />
-                    <Button type="submit" loading={joining} loadingText="Joining…">
+                    <Button type="submit" loading={joinTeam.isPending} loadingText="Joining…">
                       Join team
                     </Button>
                   </form>

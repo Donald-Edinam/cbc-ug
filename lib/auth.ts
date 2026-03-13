@@ -34,27 +34,42 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         // Email / password login
-        const res = await fetch(`${API_URL}/api/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: credentials.email,
-            password: credentials.password,
-          }),
-        });
-        if (!res.ok) return null;
+        console.log(`[NEXT-AUTH] Authorize attempt for: ${credentials.email}`);
+        try {
+          const res = await fetch(`${API_URL}/api/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+          });
 
-        const data = await res.json();
-        return {
-          id: data.user.id,
-          email: data.user.email,
-          name: data.user.name,
-          image: data.user.avatarUrl ?? null,
-          role: data.user.role,
-          emailVerified: data.user.emailVerified ?? false,
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-        };
+          console.log(`[NEXT-AUTH] Backend response status: ${res.status}`);
+
+          if (!res.ok) {
+            const errorText = await res.text();
+            console.error(`[NEXT-AUTH] Login failed: ${errorText}`);
+            return null;
+          }
+
+          const data = await res.json();
+          console.log(`[NEXT-AUTH] Login success for user: ${data.user.email}`);
+          
+          return {
+            id: data.user.id,
+            email: data.user.email,
+            name: data.user.name,
+            image: data.user.avatarUrl ?? null,
+            role: data.user.role,
+            emailVerified: data.user.emailVerified ?? false,
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
+          };
+        } catch (error) {
+          console.error(`[NEXT-AUTH] Fetch error:`, error);
+          return null;
+        }
       },
     }),
   ],
@@ -65,7 +80,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const u = user as any;
         token.role = u.role;
-        token.emailVerified = u.emailVerified ?? false;
+        (token as any).emailVerified = u.emailVerified ?? false;
         token.accessToken = u.accessToken;
         token.refreshToken = u.refreshToken;
       }
@@ -74,7 +89,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     session({ session, token }) {
       session.user.id = token.id as string;
       session.user.role = token.role as string;
-      session.user.emailVerified = token.emailVerified as boolean;
+      (session.user as any).emailVerified = token.emailVerified;
       session.user.accessToken = token.accessToken as string;
       session.user.refreshToken = token.refreshToken as string;
       return session;
