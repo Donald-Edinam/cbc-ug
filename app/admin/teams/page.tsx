@@ -24,6 +24,9 @@ export default function AdminTeamsPage() {
 
   const { data: teams = [], isLoading: loadingTeams } = useHackathonTeams(selectedHackathonId);
 
+  console.log("Teams", teams);
+  console.log("Selected Hackathon ID", selectedHackathonId);
+
   // Set initial selected hackathon
   if (!selectedHackathonId && hackathons.length > 0) {
     setSelectedHackathonId(hackathons[0].id);
