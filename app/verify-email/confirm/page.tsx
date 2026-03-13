@@ -60,7 +60,7 @@ function VerifyEmailConfirmContent() {
         }
 
         setStatus("success");
-        setTimeout(() => router.replace("/"), 2000);
+        setTimeout(() => router.replace("/dashboard"), 2000);
       } catch {
         setErrorMsg("Something went wrong. Check your connection.");
         setStatus("error");

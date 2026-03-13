@@ -40,7 +40,7 @@ function CallbackHandler() {
       if (result?.error) {
         setError(true);
       } else {
-        router.replace("/");
+        router.replace("/dashboard");
         router.refresh();
       }
     });
