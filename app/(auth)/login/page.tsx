@@ -57,9 +57,9 @@ function LoginForm() {
   }
 
   return (
-    <div className="w-full max-w-105">
-      {/* Brand mark */}
-      <div className="flex items-center gap-3 mb-8">
+    <div className="w-full max-w-lg">
+      {/* Brand mark — only visible on mobile (desktop shows left panel) */}
+      <div className="lg:hidden flex items-center gap-3 mb-8">
         <div
           className="w-9 h-9 rounded-full flex items-center justify-center text-[0.68rem] font-bold tracking-wider shrink-0"
           style={{ background: "var(--claude-tan)", color: "#fff", fontFamily: "var(--font-display)" }}
@@ -80,7 +80,7 @@ function LoginForm() {
 
       {/* Card */}
       <div
-        className="rounded-2xl border px-8 py-8"
+        className="rounded-2xl border px-10 py-10"
         style={{
           background: "var(--warm-white)",
           borderColor: "var(--sand)",
