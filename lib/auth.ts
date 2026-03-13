@@ -36,7 +36,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // Email / password login
         console.log(`[NEXT-AUTH] Authorize attempt for: ${credentials.email}`);
         try {
-          const res = await fetch(`${API_URL}/api/auth/login`, {
+          const res = await fetch(`${API_URL}/api/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -96,8 +96,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
   pages: {
-    signIn: "/auth/login",
-    error: "/auth/login",
+    signIn: "/login",
+    error: "/login",
   },
   session: { strategy: "jwt" },
 });

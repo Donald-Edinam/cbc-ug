@@ -7,7 +7,7 @@ export default auth((req) => {
   const userRole = (req.auth?.user as any)?.role;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith("/api/auth");
-  const isPublicRoute = ["/", "/auth/login", "/auth/register"].includes(nextUrl.pathname);
+  const isPublicRoute = ["/", "/login", "/register"].includes(nextUrl.pathname);
   const isAdminRoute = nextUrl.pathname.startsWith("/admin");
   const isDashboardRoute = nextUrl.pathname.startsWith("/dashboard");
 
@@ -25,7 +25,7 @@ export default auth((req) => {
   // Protect Admin routes
   if (isAdminRoute) {
     if (!isLoggedIn) {
-      return NextResponse.redirect(new URL("/auth/login", nextUrl));
+      return NextResponse.redirect(new URL("/login", nextUrl));
     }
     if (!["ADMIN", "ORGANIZER"].includes(userRole)) {
       return NextResponse.redirect(new URL("/dashboard", nextUrl));
@@ -36,7 +36,7 @@ export default auth((req) => {
   // Protect Dashboard routes
   if (isDashboardRoute) {
     if (!isLoggedIn) {
-      return NextResponse.redirect(new URL("/auth/login", nextUrl));
+      return NextResponse.redirect(new URL("/login", nextUrl));
     }
     // Admins/Organizers should stay in the admin panel
     if (["ADMIN", "ORGANIZER"].includes(userRole)) {
