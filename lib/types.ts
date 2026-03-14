@@ -114,7 +114,7 @@ export interface Team {
   createdAt?: string;
   members: TeamMember[];
   _count: { members: number };
-  project?: { id: string; title: string; submittedAt: string | null } | null;
+  project?: { id: string; title: string; description: string | null; repoUrl: string | null; demoUrl: string | null; submittedAt: string | null } | null;
 }
 
 export interface CreateTeamInput {
@@ -251,11 +251,16 @@ export interface AdminStats {
   recentHackathons: AdminDashboardHackathon[];
 }
 
+export type AnnouncementTarget = "ALL" | "TEAM";
+
 export interface Announcement {
   id: string;
   hackathonId: string;
   title: string;
   body: string;
+  targetType: AnnouncementTarget;
+  targetTeamId: string | null;
+  sentViaEmail: boolean;
   createdAt: string;
 }
 
@@ -263,4 +268,7 @@ export interface CreateAnnouncementInput {
   hackathonId: string;
   title: string;
   body: string;
+  targetType?: AnnouncementTarget;
+  targetTeamId?: string;
+  sendEmail?: boolean;
 }

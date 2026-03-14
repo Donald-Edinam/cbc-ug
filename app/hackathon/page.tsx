@@ -109,7 +109,9 @@ export default function HackathonPage() {
 
             <div className={styles.heroActions}>
               <a
-                href="/register"
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdhE9zZQALqCeiL3i7DNs4-CUPcnvnOcnGVfJx-09htJYQPhA/viewform"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={styles.btnPrimary}
               >
                 Register Now <ArrowRight size={16} strokeWidth={2} />
@@ -303,7 +305,7 @@ export default function HackathonPage() {
               provide Claude.
             </p>
             <a
-              href="https://www.jotform.com/253555944387168"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSdhE9zZQALqCeiL3i7DNs4-CUPcnvnOcnGVfJx-09htJYQPhA/viewform"
               target="_blank"
               rel="noopener noreferrer"
               className={styles.btnPrimary}

@@ -157,7 +157,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* ── Mobile / tablet bottom nav ──────────────────────────────── */}
       <nav
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-20 flex items-center justify-around px-2 py-2 border-t"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-[9999] flex items-center justify-around px-2 py-2 border-t"
         style={{ background: "var(--warm-white)", borderColor: "var(--sand)" }}
       >
         {NAV.map(({ label, href, icon: Icon }) => {

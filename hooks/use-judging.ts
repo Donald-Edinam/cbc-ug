@@ -15,6 +15,8 @@ const KEYS = {
   criteria: (hackathonId: string) =>
     ["judging", "criteria", hackathonId] as const,
   judgeAssignments: ["judging", "assignments"] as const,
+  hackathonJudges: (hackathonId: string) =>
+    ["judging", "judges", hackathonId] as const,
   judgeProjects: (hackathonId: string) =>
     ["judging", "projects", hackathonId] as const,
   scores: (hackathonId: string) =>
@@ -109,6 +111,19 @@ export function useHackathonScores(hackathonId: string) {
   });
 }
 
+// ── GET /api/judging/hackathon/:id/judges ────────────────────────────────────────
+
+export function useHackathonJudges(hackathonId: string) {
+  const api = useApiClient();
+  const { data: session } = useSession();
+  return useQuery<{ id: string; name: string; email: string }[]>({
+    queryKey: KEYS.hackathonJudges(hackathonId),
+    queryFn: () =>
+      api.get(`/api/judging/hackathon/${hackathonId}/judges`).then((r) => r.data),
+    enabled: Boolean(hackathonId) && !!session?.user?.accessToken,
+  });
+}
+
 // ── POST /api/judging/assign/:hackathonId ───────────────────────────────────────
 
 export function useAssignJudge(hackathonId: string) {
@@ -119,7 +134,9 @@ export function useAssignJudge(hackathonId: string) {
       api
         .post(`/api/judging/assign/${hackathonId}`, input)
         .then((r) => r.data),
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: KEYS.judgeAssignments }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: KEYS.judgeAssignments });
+      qc.invalidateQueries({ queryKey: KEYS.hackathonJudges(hackathonId) });
+    },
   });
 }

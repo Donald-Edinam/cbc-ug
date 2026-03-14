@@ -35,7 +35,9 @@ export default function JoinSection() {
 
           <div className={styles.joinCtaWrap} data-gsap="join-item">
             <a
-              href="/register"
+              href="https://www.jotform.com/253555944387168"
+              target="_blank"
+              rel="noopener noreferrer"
               className={styles.joinCtaBtn}
             >
               Join the Builders&apos; Club <span>&rarr;</span>

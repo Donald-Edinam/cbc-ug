@@ -50,7 +50,8 @@ function MagicVerify() {
         if (result?.error) {
           setError("Sign in failed. Please request a new link.");
         } else {
-          router.replace("/dashboard");
+          const role = data.user?.role;
+          router.replace(role === "JUDGE" ? "/judge" : "/dashboard");
         }
       } catch {
         setError("Something went wrong. Please try again.");

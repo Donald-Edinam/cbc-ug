@@ -71,7 +71,7 @@ export default function Navbar() {
           </ul>
 
           <div className={styles.navCtaWrap}>
-            <a href="/register" className={styles.navCta}>
+            <a href="https://www.jotform.com/253555944387168" target="_blank" rel="noopener noreferrer" className={styles.navCta}>
               Join the Club
             </a>
           </div>
@@ -111,7 +111,9 @@ export default function Navbar() {
           </a>
         ))}
         <a
-          href="/register"
+          href="https://www.jotform.com/253555944387168"
+          target="_blank"
+          rel="noopener noreferrer"
           className={`${styles.mobileLink} ${styles.mobileCta}`}
           onClick={closeMobile}
         >

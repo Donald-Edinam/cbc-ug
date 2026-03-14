@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
-import { useSession } from "next-auth/react";
-import { Loader2, Bell, Megaphone } from "lucide-react";
+import { Loader2, Bell, Megaphone, Mail, Users } from "lucide-react";
 import { useHackathons, useHackathon } from "@/hooks/use-hackathons";
+import { useHackathonTeams } from "@/hooks/use-teams";
 
 function fmt(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-GB", {
@@ -12,8 +12,6 @@ function fmt(dateStr: string) {
 }
 
 export default function AnnouncementsPage() {
-  const { data: session } = useSession();
-
   const { data: hackathons = [], isLoading: loadingHackathons } = useHackathons();
 
   const activeHackathon = useMemo(
@@ -27,6 +25,8 @@ export default function AnnouncementsPage() {
   const { data: hackathonDetail, isLoading: loadingDetail } = useHackathon(
     activeHackathon?.id ?? "",
   );
+
+  const { data: teams = [] } = useHackathonTeams(activeHackathon?.id ?? "");
 
   const announcements = hackathonDetail?.announcements ?? [];
 
@@ -112,16 +112,38 @@ export default function AnnouncementsPage() {
                     <Megaphone size={14} style={{ color: "var(--claude-tan)" }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="flex items-start justify-between gap-3 mb-1.5">
                       <h3 className="text-[0.95rem] font-semibold"
                         style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
                         {ann.title}
                       </h3>
                       <span className="text-[0.72rem] shrink-0"
-                        style={{ color: "var(--stone)", fontFamily: "var(--font-display)" }}>
+                        style={{ color: "var(--earth)", fontFamily: "var(--font-display)", opacity: 0.6 }}>
                         {fmt(ann.createdAt)}
                       </span>
                     </div>
+                    {/* Badges */}
+                    {(ann.targetType === "TEAM" || ann.sentViaEmail) && (
+                      <div className="flex items-center gap-1.5 flex-wrap mb-2">
+                        {ann.targetType === "TEAM" && (
+                          <span
+                            className="flex items-center gap-1 text-[0.68rem] font-semibold px-2 py-0.5 rounded-full"
+                            style={{ background: "var(--tag-ai-bg)", color: "var(--claude-tan)", fontFamily: "var(--font-display)" }}
+                          >
+                            <Users size={10} />
+                            {teams.find((t) => t.id === ann.targetTeamId)?.name ?? "Your team"}
+                          </span>
+                        )}
+                        {ann.sentViaEmail && (
+                          <span
+                            className="flex items-center gap-1 text-[0.68rem] font-semibold px-2 py-0.5 rounded-full"
+                            style={{ background: "#e8f4e8", color: "#4a6940", fontFamily: "var(--font-display)" }}
+                          >
+                            <Mail size={10} /> Sent via email
+                          </span>
+                        )}
+                      </div>
+                    )}
                     <p className="text-[0.88rem] leading-relaxed whitespace-pre-wrap"
                       style={{ color: "var(--earth)", fontFamily: "var(--font-body)" }}>
                       {ann.body}

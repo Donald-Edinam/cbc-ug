@@ -38,8 +38,11 @@ export default auth((req) => {
     if (!isLoggedIn) {
       return NextResponse.redirect(new URL("/login", nextUrl));
     }
-    // Admins/Organizers should stay in the admin panel
-    if (["ADMIN", "ORGANIZER"].includes(userRole)) {
+    // Admins/Organizers should stay in the admin panel, except for shared detail pages
+    const isSharedDetail = nextUrl.pathname.startsWith("/dashboard/teams/") || 
+                          nextUrl.pathname.startsWith("/dashboard/project");
+    
+    if (["ADMIN", "ORGANIZER"].includes(userRole) && !isSharedDetail) {
       return NextResponse.redirect(new URL("/admin", nextUrl));
     }
   }
